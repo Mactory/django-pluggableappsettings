@@ -2,8 +2,8 @@
 from __future__ import absolute_import
 import logging
 from django.test import TestCase, override_settings
-from mock import patch, MagicMock
-from django_appsettings import AppSettings
+from mock import  MagicMock
+from django_pluggableappsettings import AppSettings
 
 __author__ = 'Tim Schneider <tim.schneider@northbridge-development.de>'
 __copyright__ = "Copyright 2015, Northbridge Development Konrad & Schneider GbR"

@@ -6,7 +6,7 @@ __copyright__ = "Copyright 2015, Northbridge Development Konrad & Schneider GbR"
 __credits__ = ["Tim Schneider", ]
 __maintainer__ = "Tim Schneider"
 __email__ = "mail@northbridge-development.de"
-__status__ = "Development"
+__status__ = "Release"
 
 logger = logging.getLogger(__name__)
 
@@ -22,15 +22,15 @@ if os.path.exists('README.rst'):
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
-    name='django-splitdate',
-    version='0.1.8',
+    name='django-pluggableappsettings',
+    version='0.1.0',
     packages=find_packages(exclude=['*.tests',]),
     include_package_data=True,
-    install_requires=['Django >=1.7',],
+    install_requires=['Django >=1.8',],
     license='MIT License',
-    description='A widget for django form date fields that displays three inputs (day, month, year).',
+    description='A convenience class for providing default values for a django app setting.',
     long_description=long_description,
-    url='http://github.com/NB-Dev/django-splitdate',
+    url='http://github.com/NB-Dev/django-pluggableappsettings',
     author='Nothrbridge Development Konrad & Schneider GbR',
     author_email='mail@nb-dev.de',
     classifiers=[
