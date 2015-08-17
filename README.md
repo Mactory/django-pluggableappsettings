@@ -10,7 +10,7 @@ not present in the main settings.py
 Quick start
 -----------
 
-1. Install django-splitdate:
+1. Install django-pluggableappsettings
     * From the pip repository: ```pip install django-pluggableappsettings```
     * or directly from github: ```pip install git+git://github.com/NB-Dev/django-pluggableappsettings.git``
 

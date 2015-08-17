@@ -12,7 +12,7 @@ the setting is not present in the main settings.py
 Quick start
 -----------
 
-1. Install django-splitdate:
+1. Install django-pluggableappsettings
 
    -  From the pip repository:
       ``pip install django-pluggableappsettings``
