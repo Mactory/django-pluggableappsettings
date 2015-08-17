@@ -1,4 +1,4 @@
-[![PyPI version](https://badge.fury.io/py/django-splitdate.png)](http://badge.fury.io/py/django-splitdate) [![Build Status](https://travis-ci.org/NB-Dev/django-splitdate.svg?branch=master)](https://travis-ci.org/NB-Dev/django-splitdate) [![Coverage Status](https://coveralls.io/repos/NB-Dev/django-splitdate/badge.svg?branch=master)](https://coveralls.io/r/NB-Dev/django-splitdate?branch=master) [![Downloads](https://pypip.in/download/django-splitdate/badge.svg)](https://pypi.python.org/pypi/django-splitdate/) [![Supported Python versions](https://pypip.in/py_versions/django-splitdate/badge.svg)](https://pypi.python.org/pypi/django-splitdate/) [![License](https://pypip.in/license/django-splitdate/badge.svg)](https://pypi.python.org/pypi/django-splitdate/)
+[![PyPI version](https://badge.fury.io/py/django-appsettings.png)](http://badge.fury.io/py/django-appsettings) [![Build Status](https://travis-ci.org/NB-Dev/django-appsettings.svg?branch=master)](https://travis-ci.org/NB-Dev/django-appsettings) [![Coverage Status](https://coveralls.io/repos/NB-Dev/django-appsettings/badge.svg?branch=master)](https://coveralls.io/r/NB-Dev/django-splitdate?branch=master) [![Downloads](https://pypip.in/download/django-splitdate/badge.svg)](https://pypi.python.org/pypi/django-splitdate/) [![Supported Python versions](https://pypip.in/py_versions/django-splitdate/badge.svg)](https://pypi.python.org/pypi/django-splitdate/) [![License](https://pypip.in/license/django-splitdate/badge.svg)](https://pypi.python.org/pypi/django-splitdate/)
 =====
 django-appsettings
 =====
@@ -11,7 +11,7 @@ Quick start
 -----------
 
 1. Install django-splitdate:
-    * From the pip repository: ```pip install django_appsettings```
+    * From the pip repository: ```pip install django-appsettings```
     * or directly from github: ```pip install git+git://github.com/NB-Dev/django-appsettings.git``
 
 2. Create your AppSettings class in any of your project's files. E.g. in 'app_settings.py'.
@@ -20,7 +20,7 @@ Quick start
    in your AppSettings class
 
 	```
-	from django-appsettings import AppSettings
+	from django_appsettings import AppSettings
 	
 	class MyAppSettings(AppSettings):
 		_DEFAULT_MY_SETTING = True
@@ -40,7 +40,7 @@ without any parameters. If you use a static function, that is not bound to a cla
 ```staticmethod``` function as it would otherwise be bound to your ```MyAppSettings``` class and not work. e.g.:
 
 	```
-	from django-appsettings import AppSettings
+	from django_appsettings import AppSettings
 	
 	def function():
 		return 'Abc'
