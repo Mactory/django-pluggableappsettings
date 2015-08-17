@@ -23,10 +23,10 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-pluggableappsettings',
-    version='0.1.0',
+    version='0.1.2',
     packages=find_packages(exclude=['*.tests',]),
     include_package_data=True,
-    install_requires=['Django >=1.6',],
+    install_requires=['Django >=1.4',],
     license='MIT License',
     description='A convenience class for providing default values for a django app setting.',
     long_description=long_description,
