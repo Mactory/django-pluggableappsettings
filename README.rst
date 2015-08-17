@@ -78,15 +78,15 @@ The included tests can be run standalone by running the
 for them to run. If you also want to run coverage, you need to install
 it before running the tests
 
-.. |PyPI version| image:: https://badge.fury.io/py/django-appsettings.png
-   :target: http://badge.fury.io/py/django-appsettings
-.. |Build Status| image:: https://travis-ci.org/NB-Dev/django-appsettings.svg?branch=master
-   :target: https://travis-ci.org/NB-Dev/django-appsettings
-.. |Coverage Status| image:: https://coveralls.io/repos/NB-Dev/django-appsettings/badge.svg?branch=master
-   :target: https://coveralls.io/r/NB-Dev/django-appsettings?branch=master
-.. |Downloads| image:: https://pypip.in/download/django-appsettings/badge.svg
-   :target: https://pypi.python.org/pypi/django-appsettings/
-.. |Supported Python versions| image:: https://pypip.in/py_versions/django-appsettings/badge.svg
-   :target: https://pypi.python.org/pypi/django-appsettings/
-.. |License| image:: https://pypip.in/license/django-appsettings/badge.svg
-   :target: https://pypi.python.org/pypi/django-appsettings/
+.. |PyPI version| image:: https://badge.fury.io/py/django-pluggableappsettings.png
+   :target: http://badge.fury.io/py/django-pluggableappsettings
+.. |Build Status| image:: https://travis-ci.org/NB-Dev/django-pluggableappsettings.svg?branch=master
+   :target: https://travis-ci.org/NB-Dev/django-pluggableappsettings
+.. |Coverage Status| image:: https://coveralls.io/repos/NB-Dev/django-pluggableappsettings/badge.svg?branch=master
+   :target: https://coveralls.io/r/NB-Dev/django-pluggableappsettings?branch=master
+.. |Downloads| image:: https://pypip.in/download/django-pluggableappsettings/badge.svg
+   :target: https://pypi.python.org/pypi/django-pluggableappsettings/
+.. |Supported Python versions| image:: https://pypip.in/py_versions/django-pluggableappsettings/badge.svg
+   :target: https://pypi.python.org/pypi/django-pluggableappsettings/
+.. |License| image:: https://pypip.in/license/django-pluggableappsettings/badge.svg
+   :target: https://pypi.python.org/pypi/django-pluggableappsettings/

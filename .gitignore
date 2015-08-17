@@ -60,5 +60,6 @@ docs/_build/
 target/
 
 *.egg-info/
+README.rst
 
 
