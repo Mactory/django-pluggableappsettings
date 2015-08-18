@@ -41,10 +41,22 @@ class AppSettingsTestCase(TestCase):
     def test_access_of_attribute_default_value(self):
         self.assertEqual(TestAppSettings.VALUE, "Attribute")
 
+
+
     @override_settings(VALUE='Custom')
     def test_access_of_attribute_set_value(self):
         self.assertEqual(TestAppSettings.VALUE, "Custom")
 
+    def test_caching_of_attributes(self):
+        # first time around it should be loaded
+        self.assertEqual(TestAppSettings.VALUE, "Attribute")
+
+        print hasattr(TestAppSettings, 'VALUE')
+        # overwrite
+        TestAppSettings.VALUE = 'Overwritten'
+
+        # second time it should be recalled
+        self.assertEqual(TestAppSettings.VALUE, "Overwritten")
 
     def test_access_of_attribute_default_function(self):
         self.assertEqual(TestAppSettings.FUNCTION, 'Function')

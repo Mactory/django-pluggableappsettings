@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 class SettingsMetaClass(type):
     '''
-    Metaclass that overwrides default class attribute access to load the functions on demand
+    Metaclass that overwrites default class attribute access to load the functions on demand
     '''
 
     def __getattribute__(self, item):
@@ -26,7 +26,14 @@ class SettingsMetaClass(type):
 
         # Attributes that start with _DEFAULT_ are the default values and don't need to be looked up
         # Also if we already loaded the attribute previously, we don't need to look it up again
-        if not item.startswith('_DEFAULT_') and not hasattr(self, item):
+        # since hasattr uses this function we would get an infinite loop or always false. We therefore
+        # try to access the attribute and catch the exception to determine if the attribute is present
+        try:
+            super(SettingsMetaClass, self).__getattribute__(item)
+            has_attr = True
+        except AttributeError:
+            has_attr = False
+        if not item.startswith('_DEFAULT_') and not has_attr:
 
             # Load the value from settings but only if it is present
             from django.conf import settings
