@@ -51,7 +51,6 @@ class AppSettingsTestCase(TestCase):
         # first time around it should be loaded
         self.assertEqual(TestAppSettings.VALUE, "Attribute")
 
-        print hasattr(TestAppSettings, 'VALUE')
         # overwrite
         TestAppSettings.VALUE = 'Overwritten'
 
