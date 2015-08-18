@@ -16,7 +16,7 @@ Quick start
 
 2. Create your AppSettings class in any of your project's files. E.g. in 'app_settings.py'.
 
-3. Provide default values for any Setting you like by providing an attribute with the name '_DEFAULT_'<setting_name>
+3. Provide default values for any Setting you like by providing an attribute with the name ```_DEFAULT_```<setting_name>
    in your AppSettings class
 
 	```
@@ -54,7 +54,7 @@ Accessing Values
 ----
 You can access any setting by simply importing your AppSettings class and accessing the corresponding attribute. If the
 corresponding setting is not set in the settings.py, it will fall back to the corresponding ```_DEFAULT_``` value. If
-the ```__DEFAULT__``` value is not set, an ```AttributeError``` is raised.
+the ```_DEFAULT_``` value is not set, an ```AttributeError``` is raised.
 
 Running the tests
 ----
