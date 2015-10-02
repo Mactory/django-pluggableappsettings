@@ -9,6 +9,10 @@ not present in the main settings.py
 
 **Attention:** The project is fairly new and not stable yet.
 
+##Requirements:
+
+* Django >= 1.6
+
 ##Quick start
 
 1. Install django-pluggableappsettings

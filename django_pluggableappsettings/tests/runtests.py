@@ -62,18 +62,32 @@ settings.configure(
     USE_L10N=True,
     USE_TZ=True,
     STATIC_URL='/static/',
-    # Use a fast hasher to speed up tests.
-    PASSWORD_HASHERS=(
-        'django.contrib.auth.hashers.MD5PasswordHasher',
-    ),
     FIXTURE_DIRS=glob.glob(BASE_DIR + '/' + '*/fixtures/')
 
 )
 
-django.setup()
+try:
+    # Django 1.7 needs this, but other versions dont.
+    django.setup()
+except AttributeError:
+    pass
+
+try:
+    from django.test.simple import DjangoTestSuiteRunner
+    test_runner = DjangoTestSuiteRunner(verbosity=1)
+except ImportError:
+    from django.test.runner import DiscoverRunner
+    test_runner = DiscoverRunner(verbosity=1)
+
+failures = test_runner.run_tests(['downtime', ])
+if failures:
+    sys.exit(failures)
+
+
 args = [sys.argv[0], 'test']
 # Current module (``tests``) and its submodules.
 test_cases = '.'
+
 
 # Allow accessing test options from the command line.
 offset = 1

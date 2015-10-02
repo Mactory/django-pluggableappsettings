@@ -1,7 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 import logging
-from django.test import TestCase, override_settings
+from django.test import TestCase
+try:
+    from django.test import override_settings
+except ImportError:
+    from django.test.utils import override_settings
 from mock import MagicMock
 from django_pluggableappsettings import AppSettings, Setting, CallableSetting, ClassSetting, NOT_SET_VALUE, TypedSetting
 
