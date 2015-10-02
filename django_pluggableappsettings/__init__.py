@@ -2,6 +2,7 @@ import inspect
 import logging
 from pydoc import locate
 import collections
+from django.utils.six import with_metaclass
 
 __author__ = 'Tim Schneider <tim.schneider@northbridge-development.de>'
 __copyright__ = "Copyright 2015, Northbridge Development Konrad & Schneider GbR"
@@ -52,13 +53,12 @@ class SettingsMetaClass(type):
 
         return _values[item]
 
-
-class AppSettings(object):
+class AppSettings(with_metaclass(SettingsMetaClass, object)):
     """
     Class that has the SettingsMetaClass ass metaclass. This is the base class for AppSettings classes
     """
-    __metaclass__ = SettingsMetaClass
     _values = {}
+
 
 
 class Setting(object):
@@ -119,7 +119,7 @@ class ClassSetting(Setting):
         """
         val = super(ClassSetting, self).get(setting_name, setting_value)
         if not inspect.isclass(val):
-            if not isinstance(val, basestring):
+            if not isinstance(val, str):
                 raise ValueError('The value for the setting %s either has to be a class or a string containing the dotted path of a class.' % setting_name)
             val_string = val
             val = locate(val_string)
@@ -177,7 +177,7 @@ class StringSetting(TypedSetting):
     """
     A string setting
     """
-    _setting_type = basestring
+    _setting_type = str
     _cast_value = False
 
 class IterableSetting(TypedSetting):

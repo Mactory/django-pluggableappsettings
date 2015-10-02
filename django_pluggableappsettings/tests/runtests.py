@@ -16,7 +16,6 @@ import glob
 import os
 import sys
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
-print BASE_DIR
 sys.path.insert(0, os.path.abspath(BASE_DIR))
 
 try:
@@ -71,17 +70,6 @@ try:
     django.setup()
 except AttributeError:
     pass
-
-try:
-    from django.test.simple import DjangoTestSuiteRunner
-    test_runner = DjangoTestSuiteRunner(verbosity=1)
-except ImportError:
-    from django.test.runner import DiscoverRunner
-    test_runner = DiscoverRunner(verbosity=1)
-
-failures = test_runner.run_tests(['downtime', ])
-if failures:
-    sys.exit(failures)
 
 
 args = [sys.argv[0], 'test']
