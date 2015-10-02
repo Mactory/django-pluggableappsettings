@@ -12,7 +12,7 @@ env:
   - DJANGO_VERSION=1.6.11
   - DJANGO_VERSION=1.7.10
   - DJANGO_VERSION=1.8.4
-  - DJANGO_VERSION=1.9a
+  - DJANGO_VERSION=1.9a1
 
 matrix:
   exclude:
