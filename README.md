@@ -109,6 +109,9 @@ mock installed for them to run. If you also want to run coverage, you need to in
 
 ##CHANGELOG
 
+###v.0.2.2
+- Extended code to also work with Python 3
+
 ###v.0.2.1
 - Added ```TypedSetting``` Setting type which allows for the setting to be typechecked
 - Added ```IntSetting```, ```FloatSetting```, ```StringSetting``` and ``ÌterableSetting``` as subtypes of ```TypedSetting``
