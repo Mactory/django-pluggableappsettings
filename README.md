@@ -53,6 +53,45 @@ access of the setting.
 Behaves as a Setting but accepts only Classes or dotted paths to classes as values. If the value is a dotted path, the
 path is translated to a class before returning, so the returned value is always a class.
 
+###IntSetting
+
+Accepts only values that are of type int or can be casted to type int
+
+###FloatSetting
+
+Accepts only values of type float of values that can be casted to type float
+
+###StringSetting
+
+Accepts only strings as value
+
+###IterableSetting
+
+Makes sure that the value is an iterable
+
+###TypedSetting
+
+A class that checks whether the given value is of a certain type and optionally allows casting the value to that type.
+Used as a base class for all type checking classes and can be easily subclassed to allow checking of various
+value types.
+
+To create your own type checking Setting simply subclass this type and set the class attributes ```_setting_type```
+and ```_cast_value``` according to your needs. The ```_setting_type``` attribute specifies the desired type while the
+```_cast_value``` attribute specifies whether the value should be casted to the ```_setting_type```. A ```_cast_value```
+of ```True``` essentially results in a call of ```value = _setting_type(value)```.
+
+E.g. The ```IntSetting``` is defined as follows:
+```
+class IntSetting(TypedSetting):
+    """
+    An integer setting
+    """
+    _setting_type = int
+    _cast_value = True
+```
+
+If you need more elaborate casting functions, you can overwrite the ```cast_value(self, value)``` function
+of your type which should return the casted value.
 
 ##Accessing Values
 
@@ -65,6 +104,10 @@ mock installed for them to run. If you also want to run coverage, you need to in
 
 
 ##CHANGELOG
+
+###v.0.2.1
+- Added ```TypedSetting``` Setting type which allows for the setting to be typechecked
+- Added ```IntSetting```, ```FloatSetting```, ```StringSetting``` and ``ÌterableSetting``` as subtypes of ```TypedSetting``
 
 ###v.0.2.0
 

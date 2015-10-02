@@ -2,8 +2,8 @@
 from __future__ import absolute_import
 import logging
 from django.test import TestCase, override_settings
-from mock import  MagicMock
-from django_pluggableappsettings import AppSettings, Setting, CallableSetting, ClassSetting, NOT_SET_VALUE
+from mock import MagicMock
+from django_pluggableappsettings import AppSettings, Setting, CallableSetting, ClassSetting, NOT_SET_VALUE, TypedSetting
 
 __author__ = 'Tim Schneider <tim.schneider@northbridge-development.de>'
 __copyright__ = "Copyright 2015, Northbridge Development Konrad & Schneider GbR"
@@ -125,3 +125,41 @@ class ClassSettingTestCase(TestCase):
         setting = ClassSetting()
         value = setting.get('SETTING', 'django_pluggableappsettings.tests.test___init__.TestClass')
         self.assertEqual(value, TestClass)
+
+class TypedSettingTestCase(TestCase):
+    def test_cast_value(self):
+        class MockTypedSetting(TypedSetting):
+            _setting_type = MagicMock(return_value='casted')
+            _cast_value = False
+        setting = MockTypedSetting()
+        ret = setting.cast_value('test')
+        self.assertEqual(ret, 'test')
+        setting._setting_type.assert_not_called()
+
+        setting._cast_value = True
+        ret = setting.cast_value('test')
+        self.assertEqual(ret, 'casted')
+        setting._setting_type.assert_called_once_with('test')
+
+    def test_get_value(self):
+        class MockTypedSetting(TypedSetting):
+            pass
+        setting = MockTypedSetting()
+
+        # No _setting_type
+        self.assertRaises(AttributeError, setting.get, 'SETTING', 'val')
+
+        setting._setting_type = int
+
+        #wrong type error
+        self.assertRaisesMessage(ValueError, 'The value for setting SETTING is not of type int', setting.get, 'SETTING', 'val')
+
+        setting._cast_value = True
+
+        #cast error
+
+        self.assertRaisesMessage(ValueError, 'The value for setting SETTING cannot be casted to type int', setting.get, 'SETTING', 'val')
+
+        # No error
+        self.assertEqual(setting.get('SETTING', 1), 1)
+        self.assertEqual(setting.get('SETTING', '1'), 1)

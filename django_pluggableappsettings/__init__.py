@@ -1,6 +1,7 @@
 import inspect
 import logging
 from pydoc import locate
+import collections
 
 __author__ = 'Tim Schneider <tim.schneider@northbridge-development.de>'
 __copyright__ = "Copyright 2015, Northbridge Development Konrad & Schneider GbR"
@@ -125,3 +126,63 @@ class ClassSetting(Setting):
             if val is None:
                 raise ValueError('The class described by "%s" for the setting %s could not be found.' % (val_string, setting_name))
         return val
+
+class TypedSetting(Setting):
+    """
+    A Setting that checks the value to be of a certain type
+    """
+    _setting_type = None
+    _cast_value = False
+
+    def cast_value(self, value):
+        """
+        :param value: the current settings value
+        :return: The casted value if _cast_value is set to true. Otherwise the value itself
+        """
+        return self._setting_type(value) if self._cast_value else value
+
+    def get(self, setting_name, setting_value):
+        """
+        :param setting_name: the name of this setting. Needed for nice verbose output on errors
+        :param setting_value: The value of the setting in settings.py.
+        :return: the settings_value or the default value. This is guaranteed to be a class type
+        :except: ValueError if the setting_value (or the fallback) is not of the provided type
+        """
+        if self._setting_type is None:
+            raise AttributeError('The _setting_type attribute of type %(type)s needs to be set for the check to work' % {'type': self.__class__.__name__})
+        val = super(TypedSetting, self).get(setting_name, setting_value)
+        try:
+            val = self.cast_value(val)
+        except:
+            raise ValueError('The value for setting %(setting)s cannot be casted to type %(type)s' % {'setting': setting_name, 'type': self._setting_type.__name__})
+        if not isinstance(val, self._setting_type):
+            raise ValueError('The value for setting %(setting)s is not of type %(type)s' % {'setting': setting_name, 'type': self._setting_type.__name__})
+        return val
+
+class IntSetting(TypedSetting):
+    """
+    An integer setting
+    """
+    _setting_type = int
+    _cast_value = True
+
+class FloatSetting(TypedSetting):
+    """
+    A float setting
+    """
+    _setting_type = float
+    _cast_value = True
+
+class StringSetting(TypedSetting):
+    """
+    A string setting
+    """
+    _setting_type = basestring
+    _cast_value = False
+
+class IterableSetting(TypedSetting):
+    """
+    An iterable setting
+    """
+    _setting_type = collections.Iterable
+    _cast_value = False
