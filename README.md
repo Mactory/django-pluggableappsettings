@@ -40,40 +40,42 @@ not present in the main settings.py
 
 Three different setting types are provided with the package:
 
-###Setting
+###Setting(default_value, aliases)
 
 The most basic setting that simply returns the value from the settings.py or, if that is not set, the default value.
 If no default value is provided and the setting is not set in your settings.py, an ```AttributeError``` is thrown.
+Also a list of aliases can be passed to allow for multiple names of one setting (e.g. for backwards compatibility)
 
-###CallableSetting
+
+###CallableSetting(default_value, aliases)
 
 Behaves as a Setting but checks whether the value is callable and calls it if possible before returning.
 
 **Attention:** As each setting is only loaded once and then stored in a cache, the call is only performed on the first
 access of the setting.
 
-###ClassSetting
+###ClassSetting(default_value, aliases)
 
 Behaves as a Setting but accepts only Classes or dotted paths to classes as values. If the value is a dotted path, the
 path is translated to a class before returning, so the returned value is always a class.
 
-###IntSetting
+###IntSetting(default_value, aliases)
 
 Accepts only values that are of type int or can be casted to type int
 
-###FloatSetting
+###FloatSetting(default_value, aliases)
 
 Accepts only values of type float of values that can be casted to type float
 
-###StringSetting
+###StringSetting(default_value, aliases)
 
 Accepts only strings as value
 
-###IterableSetting
+###IterableSetting(default_value, aliases)
 
 Makes sure that the value is an iterable
 
-###TypedSetting
+###TypedSetting(default_value, aliases)
 
 A class that checks whether the given value is of a certain type and optionally allows casting the value to that type.
 Used as a base class for all type checking classes and can be easily subclassed to allow checking of various
@@ -108,6 +110,9 @@ mock installed for them to run. If you also want to run coverage, you need to in
 
 
 ##CHANGELOG
+
+###v.0.2.3
+- Added 'aliases' parameter to ```Setting``` to allow multiple names for one setting (e.g. for backwards compatibility)
 
 ###v.0.2.2
 - Extended code to also work with Python 3

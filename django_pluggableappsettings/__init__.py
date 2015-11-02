@@ -3,6 +3,7 @@ import logging
 from pydoc import locate
 import collections
 from django.utils.six import with_metaclass
+import six
 
 __author__ = 'Tim Schneider <tim.schneider@northbridge-development.de>'
 __copyright__ = "Copyright 2015, Northbridge Development Konrad & Schneider GbR"
@@ -41,9 +42,14 @@ class SettingsMetaClass(type):
             except AttributeError:
                 raise AttributeError('The setting %s is not defined for this App' % item)
 
-            # then load the values from the settings or none if it does not exist
+            # then load the value or one of its aliases from the settings or none if none exists
             from django.conf import settings
             settings_value = getattr(settings, item, NOT_SET_VALUE)
+
+            for alias in setting.get_aliases():
+                if settings_value != NOT_SET_VALUE:
+                    break
+                settings_value = getattr(settings, alias, NOT_SET_VALUE)
 
             # Use the setting's class to handle the settings value or return the default value
             value = setting.get(item, settings_value)
@@ -66,12 +72,27 @@ class Setting(object):
     Baseclass for all settings types. Takes a default value as argument.
     Returns the settings value if it is not None or the default value instead.
     """
-    def __init__(self, default_value=NOT_SET_VALUE):
+    def __init__(self, default_value=NOT_SET_VALUE, aliases=[]):
         """
         :param default_value: default value for this setting
         :return:
         """
         self.default_value = default_value
+
+        # We only accept strings as aliases so
+        # Use only strings from an iterable
+        if isinstance(aliases, collections.Iterable):
+            self._aliases = [a for a in aliases if isinstance(a, six.string_types)]
+        # or ignore all aliases
+        else:
+            self._aliases = []
+
+    def get_aliases(self):
+        """
+
+        :return: The given aliases for this setting
+        """
+        return self._aliases
 
     def get(self, setting_name, setting_value):
         """

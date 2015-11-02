@@ -24,7 +24,7 @@ class TestClass(object):
     pass
 
 class TestAppSettings(AppSettings):
-    SETTING = Setting('Default')
+    SETTING = Setting('Default',aliases=['ALIAS','ALIAS2'])
 
 class TestAppSettingsTestCase(TestCase):
     def tearDown(self):
@@ -60,6 +60,14 @@ class AppSettingsTestCase(TestAppSettingsTestCase):
     def test_get_value_from_settings(self):
         self.assertEqual(TestAppSettings.SETTING, 'Setting')
 
+    def test_alias_setting(self):
+        with override_settings(ALIAS='Alias'):
+            self.assertEqual(TestAppSettings.SETTING, 'Alias')
+
+        TestAppSettings._values = {}
+        with override_settings(ALIAS2='Alias2'):
+            self.assertEqual(TestAppSettings.SETTING, 'Alias2')
+
 class SettingTestCase(TestCase):
     def test___init__(self):
         setting = Setting('default')
@@ -67,6 +75,17 @@ class SettingTestCase(TestCase):
 
         setting = Setting(default_value='default')
         self.assertEqual(setting.default_value, 'default')
+
+        # test alias_possibilities
+        setting = Setting(aliases='abc')
+        self.assertEqual(setting._aliases, ['a', 'b', 'c'])
+
+        setting = Setting(aliases=('abc', 1, 3))
+        self.assertEqual(setting._aliases, ['abc'])
+
+        setting = Setting(aliases=1)
+        self.assertEqual(setting._aliases, [])
+
 
     def test_get_no_setting_no_default(self):
         setting = Setting()
