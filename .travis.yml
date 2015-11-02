@@ -32,7 +32,7 @@ matrix:
 install:
   - pip install .
   - pip install django==$DJANGO_VERSION
-  - pip install coveralls
+  - pip install coveralls six
 # # command to run tests, e.g. python setup.py test
 script:
   - python setup.py develop
