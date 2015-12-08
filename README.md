@@ -7,8 +7,6 @@ This app provides a baseclass to easily realize AppSettings for any django proje
 AppSettings class lies in the possibility for the programmer to assign default values for settings if the setting is
 not present in the main settings.py
 
-**Attention:** The project is fairly new and not stable yet.
-
 ##Requirements:
 
 * Django >= 1.6
@@ -110,6 +108,9 @@ mock installed for them to run. If you also want to run coverage, you need to in
 
 
 ##CHANGELOG
+
+###v.1.0.0
+- Releasing first stable version
 
 ###v.0.2.3
 - Added 'aliases' parameter to ```Setting``` to allow multiple names for one setting (e.g. for backwards compatibility)
