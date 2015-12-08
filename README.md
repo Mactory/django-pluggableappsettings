@@ -128,3 +128,6 @@ mock installed for them to run. If you also want to run coverage, you need to in
 - Redesign of settings to allow different types of settings that can now also provide type checking.
 - Settings are now explicitly defined and no ```_DEFAULT_``` prefix is needed anymore
 - Also no staticmethod decorator is needed anymore
+
+## Maintainers
+This Project is maintaned by [Northbridge Development Konrad & Schneider GbR](http://www.northbridge-development.de) Softwareentwicklung
