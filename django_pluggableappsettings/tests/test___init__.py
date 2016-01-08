@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
 import logging
+
 from django.test import TestCase
+
 try:
     from django.test import override_settings
 except ImportError:
     from django.test.utils import override_settings
-from mock import MagicMock
-from django_pluggableappsettings import AppSettings, Setting, CallableSetting, ClassSetting, NOT_SET_VALUE, TypedSetting
+from mock import MagicMock, patch
+from django_pluggableappsettings import AppSettings, Setting, ClassSetting, NOT_SET_VALUE, TypedSetting, \
+    CalledOnceSetting, CalledBaseSetting, CallableSetting, CalledEachTimeSetting
 
 __author__ = 'Tim Schneider <tim.schneider@northbridge-development.de>'
 __copyright__ = "Copyright 2015, Northbridge Development Konrad & Schneider GbR"
@@ -34,7 +37,6 @@ class TestAppSettingsTestCase(TestCase):
         self.values = {}
         TestAppSettings._values = self.values
 
-
 class AppSettingsTestCase(TestAppSettingsTestCase):
     def test_access_of_non_existing_setting(self):
         try:
@@ -46,15 +48,15 @@ class AppSettingsTestCase(TestAppSettingsTestCase):
             self.fail()
 
     def test_access_of_existing_value_from_values(self):
-        self.values['NON_EXISTENT'] = 'FOUND'
+        self.values['NON_EXISTENT'] = MagicMock(value=MagicMock(return_value='FOUND'))
 
         self.assertEqual(TestAppSettings.NON_EXISTENT, 'FOUND')
 
     def values_stored_in_dict(self):
-        mocked = MagicMock(get=MagicMock(return_value='GET'))
+        mocked = MagicMock(_get=MagicMock(return_value='GET'), _value=MagicMock(return_value='GET'))
         TestAppSettings.MOCK = mocked
         self.assertEqual(TestAppSettings.MOCK, 'GET')
-        self.assertEqual(self.values['MOCK'], 'GET')
+        self.assertEqual(self.values['MOCK'], mocked)
 
     @override_settings(SETTING='Setting')
     def test_get_value_from_settings(self):
@@ -87,36 +89,88 @@ class SettingTestCase(TestCase):
         self.assertEqual(setting._aliases, [])
 
 
-    def test_get_no_setting_no_default(self):
+    def test__get_no_setting_no_default(self):
         setting = Setting()
         self.assertRaisesMessage(
             AttributeError,
             "The setting SETTING is not defined in your settings.py and no default value is provided.",
-            setting.get,
+            setting._get,
             'SETTING',
             NOT_SET_VALUE
         )
 
-    def test_get_default(self):
+    def test__get_default(self):
         setting = Setting('default')
-        val = setting.get('SETTING', NOT_SET_VALUE)
+        val = setting._get('SETTING', NOT_SET_VALUE)
         self.assertEqual(val, 'default')
 
-    def test_get_settings_value(self):
+    def test__get_settings_value(self):
         setting = Setting('default')
-        val = setting.get('SETTING', 'settings_value')
+        val = setting._get('SETTING', 'settings_value')
         self.assertEqual(val, 'settings_value')
 
-class CallableSettingTestCase(TestCase):
-    def test_get_not_callable(self):
-        setting = CallableSetting()
-        value = setting.get('SETTING', 'String')
-        self.assertEqual(value, 'String')
+    def test_get(self):
+        with patch('django_pluggableappsettings.Setting._get', MagicMock(return_value=42)) as _get:
+            setting = Setting('default')
+            setting.get('SETTING', 'settings_value')
+            self.assertEqual(setting._value, 42)
+            _get.assert_called_with('SETTING', 'settings_value')
 
-    def test_get_callable(self):
-        setting = CallableSetting()
-        value = setting.get('SETTING', MagicMock(return_value='Called'))
+    def test__get_value(self):
+        setting = Setting('default')
+
+        #raises error without a value set
+        self.assertRaises(RuntimeError, setting._get_value)
+
+
+        #returns value if it is set
+        id_object = object()
+        setting._value = id_object
+        self.assertEqual(setting._get_value(), id_object)
+
+    def test_value(self):
+        id_object = object()
+        with patch('django_pluggableappsettings.Setting._get_value', MagicMock(return_value=id_object)) as _get_value:
+            setting = Setting('default')
+            self.assertEqual(setting.value(), id_object)
+            _get_value.assert_called_with()
+
+class CalledBaseSettingTestCase(TestCase):
+    def test_get_not_callable(self):
+        setting = CalledBaseSetting()
+        self.assertRaises(
+            ValueError,
+            setting.get,
+            'SETTING',
+            'String'
+        )
+
+    def test__get_callable(self):
+        setting = CalledBaseSetting()
+        mock = MagicMock(return_value='Called')
+        value = setting._get('SETTING', mock)
+        self.assertEqual(value, mock)
+
+class CalledOnceSettingTestCase(TestCase):
+
+    def test__get_callable(self):
+        setting = CalledOnceSetting()
+        value = setting._get('SETTING', MagicMock(return_value='Called'))
         self.assertEqual(value, 'Called')
+
+class CallableSettingTestCase(TestCase):
+
+    def test___init__(self):
+        CallableSetting()
+
+class CalledEachTimeSettingTestCase(TestCase):
+
+    def test__get_callable(self):
+        setting = CalledEachTimeSetting()
+        id_object = object()
+        with patch('django_pluggableappsettings.CalledBaseSetting._get_value', MagicMock(return_value=MagicMock(return_value=id_object))) as _get_value:
+            value = setting._get_value()
+            self.assertEqual(value, id_object)
 
 class ClassSettingTestCase(TestCase):
     def test_no_class_or_string(self):
@@ -124,7 +178,7 @@ class ClassSettingTestCase(TestCase):
         self.assertRaisesMessage(
             ValueError,
             'The value for the setting SETTING either has to be a class or a string containing the dotted path of a class.',
-            setting.get,
+            setting._get,
             'SETTING',
             1
         )
@@ -134,19 +188,19 @@ class ClassSettingTestCase(TestCase):
         self.assertRaisesMessage(
             ValueError,
             'The class described by "does.not.exist" for the setting SETTING could not be found.',
-            setting.get,
+            setting._get,
             'SETTING',
             'does.not.exist'
         )
 
     def test_class(self):
         setting = ClassSetting()
-        value = setting.get('SETTING', TestClass)
+        value = setting._get('SETTING', TestClass)
         self.assertEqual(value, TestClass)
 
     def test_dotted_class(self):
         setting = ClassSetting()
-        value = setting.get('SETTING', 'django_pluggableappsettings.tests.test___init__.TestClass')
+        value = setting._get('SETTING', 'django_pluggableappsettings.tests.test___init__.TestClass')
         self.assertEqual(value, TestClass)
 
 class TypedSettingTestCase(TestCase):
@@ -170,19 +224,19 @@ class TypedSettingTestCase(TestCase):
         setting = MockTypedSetting()
 
         # No _setting_type
-        self.assertRaises(AttributeError, setting.get, 'SETTING', 'val')
+        self.assertRaises(AttributeError, setting._get, 'SETTING', 'val')
 
         setting._setting_type = int
 
         #wrong type error
-        self.assertRaisesMessage(ValueError, 'The value for setting SETTING is not of type int', setting.get, 'SETTING', 'val')
+        self.assertRaisesMessage(ValueError, 'The value for setting SETTING is not of type int', setting._get, 'SETTING', 'val')
 
         setting._cast_value = True
 
         #cast error
 
-        self.assertRaisesMessage(ValueError, 'The value for setting SETTING cannot be casted to type int', setting.get, 'SETTING', 'val')
+        self.assertRaisesMessage(ValueError, 'The value for setting SETTING cannot be casted to type int', setting._get, 'SETTING', 'val')
 
         # No error
-        self.assertEqual(setting.get('SETTING', 1), 1)
-        self.assertEqual(setting.get('SETTING', '1'), 1)
+        self.assertEqual(setting._get('SETTING', 1), 1)
+        self.assertEqual(setting._get('SETTING', '1'), 1)
