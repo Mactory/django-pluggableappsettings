@@ -4,9 +4,10 @@ from pydoc import locate
 import collections
 from django.utils.six import with_metaclass
 import six
+from warnings import warn
 
 __author__ = 'Tim Schneider <tim.schneider@northbridge-development.de>'
-__copyright__ = "Copyright 2015, Northbridge Development Konrad & Schneider GbR"
+__copyright__ = "Copyright 2015 - 2016, Northbridge Development Konrad & Schneider GbR"
 __credits__ = ["Tim Schneider", ]
 __maintainer__ = "Tim Schneider"
 __email__ = "mail@northbridge-development.de"
@@ -51,13 +52,14 @@ class SettingsMetaClass(type):
                     break
                 settings_value = getattr(settings, alias, NOT_SET_VALUE)
 
-            # Use the setting's class to handle the settings value or return the default value
-            value = setting.get(item, settings_value)
+            # Pass the setting's value to the setting's class which can perform changes and then safe the value
+            # so that it can be retrieved by the value() method
+            setting.get(item, settings_value)
 
             # Store the value in the dict so we only have to load it once
-            _values[item] = value
+            _values[item] = setting
 
-        return _values[item]
+        return _values[item].value()
 
 class AppSettings(with_metaclass(SettingsMetaClass, object)):
     """
@@ -72,6 +74,8 @@ class Setting(object):
     Baseclass for all settings types. Takes a default value as argument.
     Returns the settings value if it is not None or the default value instead.
     """
+    _value = NOT_SET_VALUE
+
     def __init__(self, default_value=NOT_SET_VALUE, aliases=[]):
         """
         :param default_value: default value for this setting
@@ -94,7 +98,7 @@ class Setting(object):
         """
         return self._aliases
 
-    def get(self, setting_name, setting_value):
+    def _get(self, setting_name, setting_value):
         """
         :param setting_name: the name of this setting. Needed for nice verbose output on errors
         :param setting_value: The value of the setting in settings.py. Pass None if the parameter is not set
@@ -109,36 +113,82 @@ class Setting(object):
             return self.default_value
         return setting_value
 
-
-class CallableSetting(Setting):
-    """
-    The setting which also checks if the setting_value can be called, and does so if possible.
-    """
     def get(self, setting_name, setting_value):
+        value = self._get(setting_name, setting_value)
+        self._value = value
+
+    def _get_value(self):
+        if self._value == NOT_SET_VALUE:
+            raise RuntimeError('Called value() method before the value was set by the get() method')
+        return self._value
+
+    def value(self):
+        return self._get_value()
+
+class CalledBaseSetting(Setting):
+    """
+    The setting which checks if the value is callable.
+    """
+    def _get(self, setting_name, setting_value):
         """
-        uses the superclass to get the setting and then calls it if possible
+        uses the superclass to get the setting and verifies that the setting is callable
         :param setting_name: the name of this setting. Needed for nice verbose output on errors
         :param setting_value: The value of the setting in settings.py. Pass None if the parameter is not set
-        :return: setting_value if it is not None, else the default value. If that is also not set, an Attribute error
-            is raised. If the returned value can be called, it is called before returning
+        :return: the settings value
         """
-        val = super(CallableSetting, self).get(setting_name, setting_value)
-        if hasattr(val, '__call__'):
-            val = val()
+        val = super(CalledBaseSetting, self)._get(setting_name, setting_value)
+        if not hasattr(val, '__call__'):
+            raise ValueError('The value for the setting %s has to be a callable.' % setting_name)
         return val
+
+class CalledOnceSetting(CalledBaseSetting):
+    """
+    The setting calls it's callable value on first load.
+    """
+    def _get(self, setting_name, setting_value):
+        """
+        calls the callable that is returned by the superclass
+        :param setting_name: the name of this setting. Needed for nice verbose output on errors
+        :param setting_value: The value of the setting in settings.py. Pass None if the parameter is not set
+        :return: Calls the callable before returning
+        """
+        val = super(CalledOnceSetting, self)._get(setting_name, setting_value)
+        return val()
+
+
+class CallableSetting(CalledOnceSetting):
+    """
+    The deprecated old Alias of a CalledOnceSetting.
+    """
+    def __init__(self, *args, **kwargs):
+        warn('Deprecation Warning: The class CallableSetting has been renamed to CalledOnceSetting. This alias will be removed in a future version.')
+        return super(CallableSetting, self).__init__(*args, **kwargs)
+
+
+class CalledEachTimeSetting(CalledBaseSetting):
+    """
+    The setting which calles the callable value each time the setting's value is requested.
+    """
+    def _get_value(self):
+        """
+        Returns the return value of a call to value
+        """
+        value = super(CalledEachTimeSetting, self)._get_value()
+        return value()
+
 
 class ClassSetting(Setting):
     """
     A Setting which expects a class or a dotted path to a class
     """
-    def get(self, setting_name, setting_value):
+    def _get(self, setting_name, setting_value):
         """
         :param setting_name: the name of this setting. Needed for nice verbose output on errors
         :param setting_value: The value of the setting in settings.py.
         :return: the settings_value or the default value. This is guaranteed to be a class type
         :except: ValueError if the setting_value (or the fallback) is not a class and not dotted string to a class
         """
-        val = super(ClassSetting, self).get(setting_name, setting_value)
+        val = super(ClassSetting, self)._get(setting_name, setting_value)
         if not inspect.isclass(val):
             if not isinstance(val, str):
                 raise ValueError('The value for the setting %s either has to be a class or a string containing the dotted path of a class.' % setting_name)
@@ -162,7 +212,7 @@ class TypedSetting(Setting):
         """
         return self._setting_type(value) if self._cast_value else value
 
-    def get(self, setting_name, setting_value):
+    def _get(self, setting_name, setting_value):
         """
         :param setting_name: the name of this setting. Needed for nice verbose output on errors
         :param setting_value: The value of the setting in settings.py.
@@ -171,7 +221,7 @@ class TypedSetting(Setting):
         """
         if self._setting_type is None:
             raise AttributeError('The _setting_type attribute of type %(type)s needs to be set for the check to work' % {'type': self.__class__.__name__})
-        val = super(TypedSetting, self).get(setting_name, setting_value)
+        val = super(TypedSetting, self)._get(setting_name, setting_value)
         try:
             val = self.cast_value(val)
         except:
