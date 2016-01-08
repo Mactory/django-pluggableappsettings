@@ -50,7 +50,7 @@ Also a list of aliases can be passed to allow for multiple names of one setting 
 Behaves as a Setting but checks whether the value is callable and calls it before returning.
 
 **Attention:** As each setting is only loaded once and then stored in a cache, the call is only performed on the first
-access of the setting. If you need a function that is called each time use the ```CalledEachTimeSetting``
+access of the setting. If you need a function that is called each time use the ```CalledEachTimeSetting```
 
 ###CalledEachTimeSetting(default_value, aliases)
 
@@ -117,8 +117,9 @@ mock installed for them to run. If you also want to run coverage, you need to in
 
 ###Development
 - Changing structure of Setting class to being able to add repeatedly called functions as setting.
+ 
  **Warning**: This breaks compatibility of custom settings classes. To fix this, simply rename the ```get``` method of
- your custom classes to ```_get``
+ your custom classes to ``_get``
 - Added a ```CalledEachTimeSetting``` that takes a callable that is called each time the setting's value is accessed
 - Renamed the ```CallableSetting``` to ```CalledOnceSetting``` to make the differentiation to the ```CalledEachTimeSetting```
  clearer. The old name will stay as an alias for now.
