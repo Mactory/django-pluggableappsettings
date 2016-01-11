@@ -36,7 +36,7 @@ not present in the main settings.py
 
 ##Provided Setting Types
 
-Three different setting types are provided with the package:
+Different setting types are provided with the package:
 
 ###Setting(default_value, aliases)
 
@@ -49,8 +49,8 @@ Also a list of aliases can be passed to allow for multiple names of one setting 
 
 Behaves as a Setting but checks whether the value is callable and calls it before returning.
 
-**Attention:** As each setting is only loaded once and then stored in a cache, the call is only performed on the first
-access of the setting. If you need a function that is called each time use the ```CalledEachTimeSetting```
+**Attention:** The call is only performed on the first access of the setting and cached afterwards.
+If you need a function that is called each time use the `CalledEachTimeSetting`
 
 ###CalledEachTimeSetting(default_value, aliases)
 
@@ -85,12 +85,12 @@ A class that checks whether the given value is of a certain type and optionally 
 Used as a base class for all type checking classes and can be easily subclassed to allow checking of various
 value types.
 
-To create your own type checking Setting simply subclass this type and set the class attributes ```_setting_type```
-and ```_cast_value``` according to your needs. The ```_setting_type``` attribute specifies the desired type while the
-```_cast_value``` attribute specifies whether the value should be casted to the ```_setting_type```. A ```_cast_value```
-of ```True``` essentially results in a call of ```value = _setting_type(value)```.
+To create your own type checking setting simply subclass this type and set the class attributes `_setting_type`
+and `_cast_value` according to your needs. The `_setting_type` attribute specifies the desired type while the
+`_cast_value` attribute specifies whether the value should be casted to the `_setting_type`. A `_cast_value`
+of `True` essentially results in a call of `value = _setting_type(value)`.
 
-E.g. The ```IntSetting``` is defined as follows:
+E.g. The `IntSetting` is defined as follows:
 ```
 class IntSetting(TypedSetting):
     """
@@ -100,7 +100,7 @@ class IntSetting(TypedSetting):
     _cast_value = True
 ```
 
-If you need more elaborate casting functions, you can overwrite the ```cast_value(self, value)``` function
+If you need more elaborate casting functions, you can overwrite the `cast_value(self, value)` function
 of your type which should return the casted value.
 
 ##Accessing Values
@@ -109,7 +109,7 @@ You can access any setting by simply importing your AppSettings class and access
 
 ##Running the tests
 
-The included tests can be run standalone by running the ```tests/runtests.py``` script. You need to have Django and
+The included tests can be run standalone by running the `tests/runtests.py` script. You need to have Django and
 mock installed for them to run. If you also want to run coverage, you need to install it before running the tests
 
 
