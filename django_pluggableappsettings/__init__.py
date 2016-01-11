@@ -137,7 +137,7 @@ class CalledBaseSetting(Setting):
         :return:
         '''
         self._force_callable = kwargs.pop('force_callable', False)
-        return super(CalledBaseSetting, self).__init__(*args, **kwargs)
+        super(CalledBaseSetting, self).__init__(*args, **kwargs)
 
     def _get(self, setting_name, setting_value):
         """
@@ -174,7 +174,7 @@ class CallableSetting(CalledOnceSetting):
     """
     def __init__(self, *args, **kwargs):
         warn('Deprecation Warning: The class CallableSetting has been renamed to CalledOnceSetting. This alias will be removed in a future version.')
-        return super(CallableSetting, self).__init__(*args, **kwargs)
+        super(CallableSetting, self).__init__(*args, **kwargs)
 
 
 class CalledEachTimeSetting(CalledBaseSetting):
