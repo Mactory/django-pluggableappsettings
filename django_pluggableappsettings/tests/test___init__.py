@@ -136,14 +136,23 @@ class SettingTestCase(TestCase):
             _get_value.assert_called_with()
 
 class CalledBaseSettingTestCase(TestCase):
-    def test_get_not_callable(self):
-        setting = CalledBaseSetting()
+    def test___init__(self):
+        setting = CalledBaseSetting(force_callable=True)
+        self.assertTrue(setting._force_callable)
+
+        setting = CalledBaseSetting(force_callable=False)
+        self.assertFalse(setting._force_callable)
+
+    def test__get_not_callable(self):
+        setting = CalledBaseSetting(force_callable=True)
         self.assertRaises(
             ValueError,
-            setting.get,
+            setting._get,
             'SETTING',
             'String'
         )
+        setting = CalledBaseSetting(force_callable=False)
+        self.assertEqual(setting._get('SETTING', 'String'), 'String')
 
     def test__get_callable(self):
         setting = CalledBaseSetting()
@@ -158,6 +167,10 @@ class CalledOnceSettingTestCase(TestCase):
         value = setting._get('SETTING', MagicMock(return_value='Called'))
         self.assertEqual(value, 'Called')
 
+    def test__get_not_callable(self):
+        setting = CalledOnceSetting(force_callable=False)
+        self.assertEqual(setting._get('SETTING', 'String'), 'String')
+
 class CallableSettingTestCase(TestCase):
 
     def test___init__(self):
@@ -165,10 +178,17 @@ class CallableSettingTestCase(TestCase):
 
 class CalledEachTimeSettingTestCase(TestCase):
 
-    def test__get_callable(self):
+    def test__get_value_callable(self):
         setting = CalledEachTimeSetting()
         id_object = object()
         with patch('django_pluggableappsettings.CalledBaseSetting._get_value', MagicMock(return_value=MagicMock(return_value=id_object))) as _get_value:
+            value = setting._get_value()
+            self.assertEqual(value, id_object)
+
+    def test__get_value_not_callable(self):
+        setting = CalledEachTimeSetting(force_callable=False)
+        id_object = object()
+        with patch('django_pluggableappsettings.CalledBaseSetting._get_value', MagicMock(return_value=id_object)) as _get_value:
             value = setting._get_value()
             self.assertEqual(value, id_object)
 

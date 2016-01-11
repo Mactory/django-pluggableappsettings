@@ -129,6 +129,16 @@ class CalledBaseSetting(Setting):
     """
     The setting which checks if the value is callable.
     """
+    def __init__(self, *args, **kwargs):
+        '''
+        takes the 'force_callable' kwarg to set whether the value has to be callable
+        :param args:
+        :param kwargs:
+        :return:
+        '''
+        self._force_callable = kwargs.pop('force_callable', False)
+        return super(CalledBaseSetting, self).__init__(*args, **kwargs)
+
     def _get(self, setting_name, setting_value):
         """
         uses the superclass to get the setting and verifies that the setting is callable
@@ -137,7 +147,7 @@ class CalledBaseSetting(Setting):
         :return: the settings value
         """
         val = super(CalledBaseSetting, self)._get(setting_name, setting_value)
-        if not hasattr(val, '__call__'):
+        if self._force_callable and not hasattr(val, '__call__'):
             raise ValueError('The value for the setting %s has to be a callable.' % setting_name)
         return val
 
@@ -147,13 +157,15 @@ class CalledOnceSetting(CalledBaseSetting):
     """
     def _get(self, setting_name, setting_value):
         """
-        calls the callable that is returned by the superclass
+        Returns the value or the return value of a call to value if the value has the '__call__' attribute
         :param setting_name: the name of this setting. Needed for nice verbose output on errors
         :param setting_value: The value of the setting in settings.py. Pass None if the parameter is not set
-        :return: Calls the callable before returning
+        :return: the value or the return value of a call to value if the value has the '__call__' attribute
         """
         val = super(CalledOnceSetting, self)._get(setting_name, setting_value)
-        return val()
+        if hasattr(val, '__call__'):
+            return val()
+        return val
 
 
 class CallableSetting(CalledOnceSetting):
@@ -171,10 +183,12 @@ class CalledEachTimeSetting(CalledBaseSetting):
     """
     def _get_value(self):
         """
-        Returns the return value of a call to value
+        Returns the value or the return value of a call to value if the value has the '__call__' attribute
         """
-        value = super(CalledEachTimeSetting, self)._get_value()
-        return value()
+        val = super(CalledEachTimeSetting, self)._get_value()
+        if hasattr(val, '__call__'):
+            return val()
+        return val
 
 
 class ClassSetting(Setting):

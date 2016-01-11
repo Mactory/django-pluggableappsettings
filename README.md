@@ -45,17 +45,17 @@ If no default value is provided and the setting is not set in your settings.py, 
 Also a list of aliases can be passed to allow for multiple names of one setting (e.g. for backwards compatibility)
 
 
-###CalledOnceSetting(default_value, aliases)
+###CalledOnceSetting(default_value, aliases, force_callable=False)
 
-Behaves as a Setting but checks whether the value is callable and calls it before returning.
+Checks whether the value is callable and calls it once before returning. Subsequent accesses to this setting return the
+cached return value of the first call. If `force_callable` is `True`, the setting throws a `ValueError` if the value of
+the setting is not callable.
 
-**Attention:** The call is only performed on the first access of the setting and cached afterwards.
-If you need a function that is called each time use the `CalledEachTimeSetting`
 
-###CalledEachTimeSetting(default_value, aliases)
+###CalledEachTimeSetting(default_value, aliases, force_callable=False)
 
-Behaves as a Setting but checks whether the value is callable. The callable is called each time when the setting is
-accessed.
+Checks whether the value is callable. If so, the callable is called each time when the setting is
+accessed. If `force_callable` is `True`, the setting throws a `ValueError` if the value of the setting is not callable.
 
 
 ###ClassSetting(default_value, aliases)
@@ -115,14 +115,16 @@ mock installed for them to run. If you also want to run coverage, you need to in
 
 ##CHANGELOG
 
-###Development
+###v.1.1.0
 - Changing structure of Setting class to being able to add repeatedly called functions as setting.
  
- **Warning**: This breaks compatibility of custom settings classes. To fix this, simply rename the ```get``` method of
- your custom classes to ``_get``
-- Added a ```CalledEachTimeSetting``` that takes a callable that is called each time the setting's value is accessed
-- Renamed the ```CallableSetting``` to ```CalledOnceSetting``` to make the differentiation to the ```CalledEachTimeSetting```
+ **Warning**: This breaks compatibility of custom settings classes. To fix this, simply rename the `get` method of
+ your custom classes to `_get`
+- Added a `CalledEachTimeSetting` that takes a callable that is called each time the setting's value is accessed
+- Renamed the `CallableSetting` to `CalledOnceSetting` to make the differentiation to the `CalledEachTimeSetting`
  clearer. The old name will stay as an alias for now.
+- The `CalledEachTimeSetting` and the `CalledOnceSetting` take an `force_callable` kwarg to set whether the value of the
+setting is enforced to be callable or not.
 
 ###v.1.0.0
 - Releasing first stable version
@@ -143,6 +145,12 @@ mock installed for them to run. If you also want to run coverage, you need to in
 - Redesign of settings to allow different types of settings that can now also provide type checking.
 - Settings are now explicitly defined and no ```_DEFAULT_``` prefix is needed anymore
 - Also no staticmethod decorator is needed anymore
+
+## ToDos:
+- Allow the easy definition of multiple allowed setting types so that a setting could e.g. accept either string or an
+Integer
+- Allow the chaining of callables with typed settings to check that the return value of a callable is of the correct
+type
 
 ## Maintainers
 This Project is maintaned by [Northbridge Development Konrad & Schneider GbR](http://www.northbridge-development.de) Softwareentwicklung
