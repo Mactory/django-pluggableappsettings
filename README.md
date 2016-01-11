@@ -115,6 +115,9 @@ mock installed for them to run. If you also want to run coverage, you need to in
 
 ##CHANGELOG
 
+###v.1.1.1
+- I screwed up with pypi and need to bump the version number - Sorry
+
 ###v.1.1.0
 - Changing structure of Setting class to being able to add repeatedly called functions as setting.
  
