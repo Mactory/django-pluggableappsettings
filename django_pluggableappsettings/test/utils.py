@@ -36,7 +36,7 @@ class override_appsettings(override_settings):
 
     def enable(self):
         _values = self.appsetting._values
-        for key, new_value in self.options.iteritems():
+        for key, new_value in self.options.items():
             if not isinstance(new_value, Setting):
                 new_value = MockSetting(new_value)
             #first make sure the setting is loaded
@@ -46,5 +46,5 @@ class override_appsettings(override_settings):
 
     def disable(self):
         _values = self.appsetting._values
-        for key, orig_value in self.orig_settings.iteritems():
+        for key, orig_value in self.orig_settings.items():
             _values[key] = orig_value
