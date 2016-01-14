@@ -70,6 +70,15 @@ class AppSettingsTestCase(TestAppSettingsTestCase):
         with override_settings(ALIAS2='Alias2'):
             self.assertEqual(TestAppSettings.SETTING, 'Alias2')
 
+    def test_accessing__values(self):
+        # test if we get the real _value dictionary by injecting a mock setting and retrieving it in the normal way
+        id_obj = object()
+        mock_setting = MagicMock(value=MagicMock(return_value=id_obj))
+        TestAppSettings._values['test'] = mock_setting
+
+        self.assertEqual(TestAppSettings.test, id_obj)
+
+
 class SettingTestCase(TestCase):
     def test___init__(self):
         setting = Setting('default')

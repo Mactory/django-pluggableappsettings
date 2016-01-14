@@ -107,6 +107,29 @@ of your type which should return the casted value.
 
 You can access any setting by simply importing your AppSettings class and accessing the corresponding attribute. 
 
+## Tests with AppSettings
+
+The package provides a convenient `override_appsettings` decorator / context manager to allow for the temporary
+override of AppSettings values. It is used just like Django's `override_settings` decorator but with an extra argument:
+The AppSettings-Class that is to be altered has to be passed in as first argument. Following should be keyword, value
+arguments where the keyword is the name of the setting to be overridden and the value is the desired return value.
+
+E.g.:
+```
+from django_pluggableappsettings.test.utils import override_appsettings
+from myapp.appsettings import MyAppSettings
+
+class SomeTestCase(TestCase):
+    @override_appsettings(MyAppSettings, SETTING='new_value')
+    def test_decorated(self):
+        MyAppSettings.SETTING # This returns 'new_value'
+    
+    def test_context_manager(self):
+        with override_appsettings(MyAppSettings, SETTING='new_value'):
+            MyAppSettings.SETTING # This returns 'new_value'
+
+```
+
 ##Running the tests
 
 The included tests can be run standalone by running the `tests/runtests.py` script. You need to have Django and
@@ -114,6 +137,9 @@ mock installed for them to run. If you also want to run coverage, you need to in
 
 
 ##CHANGELOG
+
+###Development
+- Adding an `override_appsettings` decorator / context manager to allow the overriding of AppSettings values in test
 
 ###v.1.1.1
 - I screwed up with pypi and need to bump the version number - Sorry
