@@ -46,9 +46,6 @@ class SettingsMetaClass(type):
         # we store all already loaded values in the _values dict, so we only have to load them once
         _values = super(SettingsMetaClass, self).__getattribute__('_values')
 
-        if item_name == '_values':
-            return _values
-
         # If it is not in _values, we need to load it
         if not item_name in _values:
             # load the value or one of its aliases from the settings or none if none exists
