@@ -21,55 +21,59 @@ class SettingsMetaClass(type):
     '''
     Metaclass that overwrites default class attribute access to load the functions on demand
     '''
+    _values = {}
 
-    def __getattribute__(self, item):
+    def __getattribute__(self, item_name):
         '''
         Function that is called whenever a class attribute is accessed.
         We then try to load the same setting from the django settings and use a default value as fallback if the
         setting does not exist
 
-        :param item: The name of the attribute
+        :param item_name: The name of the attribute
         :return: The value of the attribute
         '''
+
+        # first retrieve the item if possible
+        try:
+            item = super(SettingsMetaClass, self).__getattribute__(item_name)
+        except AttributeError:
+            raise AttributeError('The setting %s is not defined for this App' % item_name)
+
+        if not isinstance(item, Setting):
+            # we requested an item that is not a setting but still available, so we simply return it
+            return item
 
         # we store all already loaded values in the _values dict, so we only have to load them once
         _values = super(SettingsMetaClass, self).__getattribute__('_values')
 
-        if item == '_values':
+        if item_name == '_values':
             return _values
 
         # If it is not in _values, we need to load it
-        if not item in _values:
-            # first see, if it is defined at all
-            try:
-                setting = super(SettingsMetaClass, self).__getattribute__(item)
-            except AttributeError:
-                raise AttributeError('The setting %s is not defined for this App' % item)
-
-            # then load the value or one of its aliases from the settings or none if none exists
+        if not item_name in _values:
+            # load the value or one of its aliases from the settings or none if none exists
             from django.conf import settings
-            settings_value = getattr(settings, item, NOT_SET_VALUE)
+            settings_value = getattr(settings, item_name, NOT_SET_VALUE)
 
-            for alias in setting.get_aliases():
+            for alias in item.get_aliases():
                 if settings_value != NOT_SET_VALUE:
                     break
                 settings_value = getattr(settings, alias, NOT_SET_VALUE)
 
             # Pass the setting's value to the setting's class which can perform changes and then safe the value
             # so that it can be retrieved by the value() method
-            setting.get(item, settings_value)
+            item.get(item_name, settings_value)
 
             # Store the value in the dict so we only have to load it once
-            _values[item] = setting
+            _values[item_name] = item
 
-        return _values[item].value()
+        return _values[item_name].value()
 
 class AppSettings(with_metaclass(SettingsMetaClass, object)):
     """
     Class that has the SettingsMetaClass ass metaclass. This is the base class for AppSettings classes
     """
-    _values = {}
-
+    pass
 
 
 class Setting(object):

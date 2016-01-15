@@ -29,6 +29,8 @@ class TestClass(object):
 class TestAppSettings(AppSettings):
     SETTING = Setting('Default',aliases=['ALIAS','ALIAS2'])
 
+
+
 class TestAppSettingsTestCase(TestCase):
     def tearDown(self):
         TestAppSettings._values = {}
@@ -39,6 +41,10 @@ class TestAppSettingsTestCase(TestCase):
 
 class AppSettingsTestCase(TestAppSettingsTestCase):
     def test_access_of_non_existing_setting(self):
+        '''
+        Test whether an Attribute Error is thrown if a non existent setting is accessed
+        :return:
+        '''
         try:
             TestAppSettings.NON_EXISTENT
             self.fail()
@@ -47,12 +53,30 @@ class AppSettingsTestCase(TestAppSettingsTestCase):
         except:
             self.fail()
 
-    def test_access_of_existing_value_from_values(self):
-        self.values['NON_EXISTENT'] = MagicMock(value=MagicMock(return_value='FOUND'))
+    def test_access_of_non_settings(self):
+        '''
+        Test whether non Setting attributes can be accessed
+        :return:
+        '''
+        id_object = object()
+        TestAppSettings.test_obj = id_object
 
-        self.assertEqual(TestAppSettings.NON_EXISTENT, 'FOUND')
+        self.assertEqual(TestAppSettings.test_obj, id_object)
+
+    def test_access_of_existing_value_from_values(self):
+        '''
+        Test whether a Setting stored in the values dictionary receives prominence over the configured Setting, a.k.a
+        wheter a once loaded setting is not loaded again
+        :return:
+        '''
+        self.values['SETTING'] = MagicMock(value=MagicMock(return_value='FOUND'))
+        self.assertEqual(TestAppSettings.SETTING, 'FOUND')
 
     def values_stored_in_dict(self):
+        '''
+        Test whether a Setting is saved in the values dictionary after it's first access
+        :return:
+        '''
         mocked = MagicMock(_get=MagicMock(return_value='GET'), _value=MagicMock(return_value='GET'))
         TestAppSettings.MOCK = mocked
         self.assertEqual(TestAppSettings.MOCK, 'GET')
@@ -60,9 +84,17 @@ class AppSettingsTestCase(TestAppSettingsTestCase):
 
     @override_settings(SETTING='Setting')
     def test_get_value_from_settings(self):
+        '''
+        Test whether a value can be accessed
+        :return:
+        '''
         self.assertEqual(TestAppSettings.SETTING, 'Setting')
 
     def test_alias_setting(self):
+        '''
+        Test whether a value can be accessed by an alias
+        :return:
+        '''
         with override_settings(ALIAS='Alias'):
             self.assertEqual(TestAppSettings.SETTING, 'Alias')
 
@@ -70,13 +102,6 @@ class AppSettingsTestCase(TestAppSettingsTestCase):
         with override_settings(ALIAS2='Alias2'):
             self.assertEqual(TestAppSettings.SETTING, 'Alias2')
 
-    def test_accessing__values(self):
-        # test if we get the real _value dictionary by injecting a mock setting and retrieving it in the normal way
-        id_obj = object()
-        mock_setting = MagicMock(value=MagicMock(return_value=id_obj))
-        TestAppSettings._values['test'] = mock_setting
-
-        self.assertEqual(TestAppSettings.test, id_obj)
 
 
 class SettingTestCase(TestCase):
