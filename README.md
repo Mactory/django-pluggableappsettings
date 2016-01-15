@@ -138,8 +138,10 @@ mock installed for them to run. If you also want to run coverage, you need to in
 
 ##CHANGELOG
 
-###Development
+###v. 1.1.2 (2016-01-15)
 - Adding an `override_appsettings` decorator / context manager to allow the overriding of AppSettings values in test
+- Added the possibility to retrieve non-`Setting` attributes from the `AppSettings` class to allow for custom attributes
+ or custom functions.
 
 ###v.1.1.1
 - I screwed up with pypi and need to bump the version number - Sorry
