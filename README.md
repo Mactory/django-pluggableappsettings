@@ -38,48 +38,50 @@ not present in the main settings.py
 
 Different setting types are provided with the package:
 
-###Setting(default_value, aliases)
+###Setting(default_value, setting_name, aliases)
 
-The most basic setting that simply returns the value from the settings.py or, if that is not set, the default value.
+The most basic setting that looks up the setting's value from the `settings.py` usually the attribute name is used for
+the detection. If, however, the `settings_name` parameter is given, this name is used instead for the lookup in the
+`settings.py`. It simply returns the value from the settings.py or, if that is not set, the default value.
 If no default value is provided and the setting is not set in your settings.py, an ```AttributeError``` is thrown.
 Also a list of aliases can be passed to allow for multiple names of one setting (e.g. for backwards compatibility)
 
 
-###CalledOnceSetting(default_value, aliases, force_callable=False)
+###CalledOnceSetting(default_value, setting_name, aliases, force_callable=False)
 
 Checks whether the value is callable and calls it once before returning. Subsequent accesses to this setting return the
 cached return value of the first call. If `force_callable` is `True`, the setting throws a `ValueError` if the value of
 the setting is not callable.
 
 
-###CalledEachTimeSetting(default_value, aliases, force_callable=False)
+###CalledEachTimeSetting(default_value, setting_name, aliases, force_callable=False)
 
 Checks whether the value is callable. If so, the callable is called each time when the setting is
 accessed. If `force_callable` is `True`, the setting throws a `ValueError` if the value of the setting is not callable.
 
 
-###ClassSetting(default_value, aliases)
+###ClassSetting(default_value, setting_name, aliases)
 
 Behaves as a Setting but accepts only Classes or dotted paths to classes as values. If the value is a dotted path, the
 path is translated to a class before returning, so the returned value is always a class.
 
-###IntSetting(default_value, aliases)
+###IntSetting(default_value, setting_name, aliases)
 
 Accepts only values that are of type int or can be casted to type int
 
-###FloatSetting(default_value, aliases)
+###FloatSetting(default_value, setting_name, aliases)
 
 Accepts only values of type float of values that can be casted to type float
 
-###StringSetting(default_value, aliases)
+###StringSetting(default_value, setting_name, aliases)
 
 Accepts only strings as value
 
-###IterableSetting(default_value, aliases)
+###IterableSetting(default_value, setting_name, aliases)
 
 Makes sure that the value is an iterable
 
-###TypedSetting(default_value, aliases)
+###TypedSetting(default_value, setting_name, aliases)
 
 A class that checks whether the given value is of a certain type and optionally allows casting the value to that type.
 Used as a base class for all type checking classes and can be easily subclassed to allow checking of various
@@ -137,6 +139,12 @@ mock installed for them to run. If you also want to run coverage, you need to in
 
 
 ##CHANGELOG
+
+###v. 1.1.3 (2016-01-27)
+- Adding the possibility to look for a settings value under a different name in the `settings.py` by usage of the
+`settings_name` parameter
+- Fixing a bug that caused all `AppSettings` instances to share the same cache of loaded settings. This could cause the
+settings to be overridden by other settings 
 
 ###v. 1.1.2 (2016-01-15)
 - Adding an `override_appsettings` decorator / context manager to allow the overriding of AppSettings values in test

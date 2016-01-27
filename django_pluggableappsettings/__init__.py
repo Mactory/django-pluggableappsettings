@@ -21,7 +21,11 @@ class SettingsMetaClass(type):
     '''
     Metaclass that overwrites default class attribute access to load the functions on demand
     '''
-    _values = {}
+
+    def __init__(self, *args, **kwargs):
+        super(SettingsMetaClass, self).__init__(*args, **kwargs)
+        self._values = {}
+
 
     def __getattribute__(self, item_name):
         '''
@@ -48,9 +52,11 @@ class SettingsMetaClass(type):
 
         # If it is not in _values, we need to load it
         if not item_name in _values:
+            name_in_settings_py = item.get_settings_name() or item_name
+
             # load the value or one of its aliases from the settings or none if none exists
             from django.conf import settings
-            settings_value = getattr(settings, item_name, NOT_SET_VALUE)
+            settings_value = getattr(settings, name_in_settings_py, NOT_SET_VALUE)
 
             for alias in item.get_aliases():
                 if settings_value != NOT_SET_VALUE:
@@ -80,12 +86,19 @@ class Setting(object):
     """
     _value = NOT_SET_VALUE
 
-    def __init__(self, default_value=NOT_SET_VALUE, aliases=[]):
+    def __init__(self, default_value=NOT_SET_VALUE, settings_name=None, aliases=[], ):
         """
         :param default_value: default value for this setting
+        :param settings_name: Normally the user defined value for a setting is searched in the settings.py by the
+        attribute name given to the settings instance. If the optional settings_name parameter is specified, this name
+        is looked for instead (optional)
+        :param aliases: Additional, optional, names which are looked for in the settings.py if the main setting name can
+        not be found. (optional)
         :return:
         """
         self.default_value = default_value
+
+        self._settings_name = settings_name
 
         # We only accept strings as aliases so
         # Use only strings from an iterable
@@ -94,6 +107,9 @@ class Setting(object):
         # or ignore all aliases
         else:
             self._aliases = []
+
+    def get_settings_name(self):
+        return self._settings_name
 
     def get_aliases(self):
         """
@@ -112,7 +128,9 @@ class Setting(object):
         if setting_value == NOT_SET_VALUE:
             if self.default_value == NOT_SET_VALUE:
                 raise AttributeError(
-                    'The setting %s is not defined in your settings.py and no default value is provided.' % setting_name
+                    'The setting %s is not defined in your settings.py and no default value is provided.' % (
+                        self.get_settings_name() or setting_name
+                    )
                 )
             return self.default_value
         return setting_value

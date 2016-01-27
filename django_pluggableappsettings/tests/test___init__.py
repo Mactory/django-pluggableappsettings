@@ -102,6 +102,41 @@ class AppSettingsTestCase(TestAppSettingsTestCase):
         with override_settings(ALIAS2='Alias2'):
             self.assertEqual(TestAppSettings.SETTING, 'Alias2')
 
+    @override_settings(OTHER_NAME='VALUE')
+    def test_get_setting_with_other_name(self):
+        class TestSettings(AppSettings):
+            SETTING = Setting(settings_name='OTHER_NAME')
+
+        self.assertEqual(TestSettings.SETTING, 'VALUE')
+
+    def test_multiple_instances_use_different_lists(self):
+        id_obj1 = object()
+        id_obj2 = object()
+
+        class Settings1(AppSettings):
+            TEST = Setting(id_obj1)
+            TEST1 = Setting(id_obj1)
+
+        class Settings2(AppSettings):
+            TEST = Setting(id_obj2)
+            TEST2 = Setting(id_obj2)
+
+        # Access all settings
+        Settings1.TEST
+        Settings1.TEST1
+        Settings2.TEST
+        Settings2.TEST2
+
+        # now make sure each Settings class only has access to its own settings
+        self.assertEqual(len(Settings1._values), 2)
+        self.assertEqual(len(Settings2._values), 2)
+        self.assertEqual(Settings1.TEST, id_obj1)
+        self.assertEqual(Settings1.TEST1, id_obj1)
+        self.assertEqual(Settings2.TEST, id_obj2)
+        self.assertEqual(Settings2.TEST2, id_obj2)
+
+
+
 
 
 class SettingTestCase(TestCase):
@@ -111,6 +146,10 @@ class SettingTestCase(TestCase):
 
         setting = Setting(default_value='default')
         self.assertEqual(setting.default_value, 'default')
+
+        # test setting of settings_name
+        setting = Setting(settings_name='SOME_NAME')
+        self.assertEqual(setting._settings_name, 'SOME_NAME')
 
         # test alias_possibilities
         setting = Setting(aliases='abc')
@@ -122,6 +161,16 @@ class SettingTestCase(TestCase):
         setting = Setting(aliases=1)
         self.assertEqual(setting._aliases, [])
 
+    def test_get_settings_name(self):
+        setting = Setting(settings_name='SOME_NAME')
+        self.assertEqual(setting.get_settings_name(), 'SOME_NAME')
+
+    def test_get_aliases(self):
+        id_obj = object()
+        setting = Setting()
+        setting._aliases = id_obj
+
+        self.assertEqual(setting.get_aliases(), id_obj)
 
     def test__get_no_setting_no_default(self):
         setting = Setting()
@@ -168,6 +217,7 @@ class SettingTestCase(TestCase):
             setting = Setting('default')
             self.assertEqual(setting.value(), id_object)
             _get_value.assert_called_with()
+
 
 class CalledBaseSettingTestCase(TestCase):
     def test___init__(self):
