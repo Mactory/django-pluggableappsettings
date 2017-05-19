@@ -23,4 +23,4 @@ f.write(doc.rst)
 f.close()
 
 os.system("python setup.py sdist")
-os.system("twine upload dist/*")
+os.system("twine upload --skip-existing dist/*")
