@@ -2,18 +2,18 @@
 
 
 
-#django-pluggableappsettings
+# django-pluggableappsettings
 
 
 This app provides a baseclass to easily realize AppSettings for any django project. The advantage of using an
 AppSettings class lies in the possibility for the programmer to assign default values for settings if the setting is
 not present in the main settings.py
 
-##Requirements:
+## Requirements:
 
 * Django >= 1.6
 
-##Quick start
+## Quick start
 
 1. Install django-pluggableappsettings
     * From the pip repository: ```pip install django-pluggableappsettings```
@@ -36,11 +36,11 @@ not present in the main settings.py
 	setting = MyAppSettings.MY_SETTING
 	```
 
-##Provided Setting Types
+## Provided Setting Types
 
 Different setting types are provided with the package:
 
-###Setting(default_value, setting_name, aliases)
+### Setting(default_value, setting_name, aliases)
 
 The most basic setting that looks up the setting's value from the `settings.py` usually the attribute name is used for
 the detection. If, however, the `settings_name` parameter is given, this name is used instead for the lookup in the
@@ -49,41 +49,41 @@ If no default value is provided and the setting is not set in your settings.py, 
 Also a list of aliases can be passed to allow for multiple names of one setting (e.g. for backwards compatibility)
 
 
-###CalledOnceSetting(default_value, setting_name, aliases, force_callable=False)
+### CalledOnceSetting(default_value, setting_name, aliases, force_callable=False)
 
 Checks whether the value is callable and calls it once before returning. Subsequent accesses to this setting return the
 cached return value of the first call. If `force_callable` is `True`, the setting throws a `ValueError` if the value of
 the setting is not callable.
 
 
-###CalledEachTimeSetting(default_value, setting_name, aliases, force_callable=False)
+### CalledEachTimeSetting(default_value, setting_name, aliases, force_callable=False)
 
 Checks whether the value is callable. If so, the callable is called each time when the setting is
 accessed. If `force_callable` is `True`, the setting throws a `ValueError` if the value of the setting is not callable.
 
 
-###ClassSetting(default_value, setting_name, aliases)
+### ClassSetting(default_value, setting_name, aliases)
 
 Behaves as a Setting but accepts only Classes or dotted paths to classes as values. If the value is a dotted path, the
 path is translated to a class before returning, so the returned value is always a class.
 
-###IntSetting(default_value, setting_name, aliases)
+### IntSetting(default_value, setting_name, aliases)
 
 Accepts only values that are of type int or can be casted to type int
 
-###FloatSetting(default_value, setting_name, aliases)
+### FloatSetting(default_value, setting_name, aliases)
 
 Accepts only values of type float of values that can be casted to type float
 
-###StringSetting(default_value, setting_name, aliases)
+### StringSetting(default_value, setting_name, aliases)
 
 Accepts only strings as value
 
-###IterableSetting(default_value, setting_name, aliases)
+### IterableSetting(default_value, setting_name, aliases)
 
 Makes sure that the value is an iterable
 
-###TypedSetting(default_value, setting_name, aliases)
+### TypedSetting(default_value, setting_name, aliases)
 
 A class that checks whether the given value is of a certain type and optionally allows casting the value to that type.
 Used as a base class for all type checking classes and can be easily subclassed to allow checking of various
@@ -107,7 +107,7 @@ class IntSetting(TypedSetting):
 If you need more elaborate casting functions, you can overwrite the `cast_value(self, value)` function
 of your type which should return the casted value.
 
-##Accessing Values
+## Accessing Values
 
 You can access any setting by simply importing your AppSettings class and accessing the corresponding attribute. 
 
@@ -134,35 +134,35 @@ class SomeTestCase(TestCase):
 
 ```
 
-##Running the tests
+## Running the tests
 
 The included tests can be run standalone by running the `tests/runtests.py` script. You need to have Django and
 mock installed for them to run. If you also want to run coverage, you need to install it before running the tests
 
 
-##CHANGELOG
+## CHANGELOG
 
-###v 1.1.5 (2017-05-19)
+### v 1.1.5 (2017-05-19)
 - Version bump as I forgot to convert the readme. Added a publish.py to automate publishing in future.
 
-###v. 1.1.4 (2017-05-19)
+### v. 1.1.4 (2017-05-19)
 - Adding tests for Django 1.10 and 1.11.
 
-###v. 1.1.3 (2016-01-27)
+### v. 1.1.3 (2016-01-27)
 - Adding the possibility to look for a settings value under a different name in the `settings.py` by usage of the
 `settings_name` parameter
 - Fixing a bug that caused all `AppSettings` instances to share the same cache of loaded settings. This could cause the
 settings to be overridden by other settings 
 
-###v. 1.1.2 (2016-01-15)
+### v. 1.1.2 (2016-01-15)
 - Adding an `override_appsettings` decorator / context manager to allow the overriding of AppSettings values in test
 - Added the possibility to retrieve non-`Setting` attributes from the `AppSettings` class to allow for custom attributes
  or custom functions.
 
-###v.1.1.1
+### v.1.1.1
 - I screwed up with pypi and need to bump the version number - Sorry
 
-###v.1.1.0
+### v.1.1.0
 - Changing structure of Setting class to being able to add repeatedly called functions as setting.
  
  **Warning**: This breaks compatibility of custom settings classes. To fix this, simply rename the `get` method of
@@ -173,20 +173,20 @@ settings to be overridden by other settings
 - The `CalledEachTimeSetting` and the `CalledOnceSetting` take an `force_callable` kwarg to set whether the value of the
 setting is enforced to be callable or not.
 
-###v.1.0.0
+### v.1.0.0
 - Releasing first stable version
 
-###v.0.2.3
+### v.0.2.3
 - Added 'aliases' parameter to ```Setting``` to allow multiple names for one setting (e.g. for backwards compatibility)
 
-###v.0.2.2
+### v.0.2.2
 - Extended code to also work with Python 3
 
-###v.0.2.1
+### v.0.2.1
 - Added ```TypedSetting``` Setting type which allows for the setting to be typechecked
 - Added ```IntSetting```, ```FloatSetting```, ```StringSetting``` and ``ÌterableSetting``` as subtypes of ```TypedSetting``
 
-###v.0.2.0
+### v.0.2.0
 
 - Added the changelog
 - Redesign of settings to allow different types of settings that can now also provide type checking.
