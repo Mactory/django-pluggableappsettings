@@ -29,11 +29,13 @@ matrix:
     - python: "3.4"
       env: DJANGO_VERSION=1.6.11
     - python: "3.5"
-      env: DJANGO_VERSION=1.6.11
+      env: DJANGO_VERSION=1.6.11 #HTMLParseError is no longer supported
     - python: "3.5"
-      env: DJANGO_VERSION=1.7.11
-    - python: "3.5"
-      env: DJANGO_VERSION=1.8.11
+      env: DJANGO_VERSION=1.7.11 #HTMLParseError is no longer supported
+    - python: "3.6"
+      env: DJANGO_VERSION=1.6.11  #HTMLParseError is no longer supported
+    - python: "3.6"
+      env: DJANGO_VERSION=1.7.11  #HTMLParseError is no longer supported
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
