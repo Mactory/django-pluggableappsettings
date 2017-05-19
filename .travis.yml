@@ -4,6 +4,7 @@ python:
   - "3.3"
   - "3.4"
   - "3.5"
+  - "3.6"
 before_install:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
@@ -20,7 +21,11 @@ matrix:
     - python: "3.3"
       env: DJANGO_VERSION=1.6.11
     - python: "3.3"
-      env: DJANGO_VERSION=1.9.4
+      env: DJANGO_VERSION=1.9.13
+    - python: "3.3"
+      env: DJANGO_VERSION=1.10.7
+    - python: "3.3"
+      env: DJANGO_VERSION=1.11.1
     - python: "3.4"
       env: DJANGO_VERSION=1.6.11
     - python: "3.5"
@@ -32,7 +37,6 @@ matrix:
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
-  - pip install .
   - pip install django==$DJANGO_VERSION
   - pip install coveralls six
 # # command to run tests, e.g. python setup.py test
