@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 import glob
 import os
 import sys
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.insert(0, os.path.abspath(BASE_DIR))
 
 try:
