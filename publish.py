@@ -14,11 +14,13 @@ logger = logging.getLogger(__name__)
 
 import pandoc
 
-pandoc.core.PANDOC_PATH = '/usr/local/bin/pandoc'
+os.environ.setdefault('PYPANDOC_PANDOC', '/usr/local/bin/pandoc')
 
 doc = pandoc.Document()
 doc.markdown = open('README.md').read()
 f = open('README.rst','w+')
 f.write(doc.rst)
 f.close()
-os.system("python setup.py register")
+
+os.system("python setup.py sdist")
+os.system("twine upload dist/*")
