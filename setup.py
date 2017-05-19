@@ -23,7 +23,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-pluggableappsettings',
-    version='1.1.5',
+    version='1.1.6',
     packages=find_packages(exclude=['*.tests',]),
     include_package_data=True,
     install_requires=['Django >=1.6',],

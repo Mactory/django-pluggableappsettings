@@ -142,7 +142,10 @@ mock installed for them to run. If you also want to run coverage, you need to in
 
 ## CHANGELOG
 
-### v 1.1.5 (2017-05-19)
+### v. 1.1.6 (2017-05-19)
+- Fixing the README to be correctly displayed on pypi
+
+### v. 1.1.5 (2017-05-19)
 - Version bump as I forgot to convert the readme. Added a publish.py to automate publishing in future.
 
 ### v. 1.1.4 (2017-05-19)
