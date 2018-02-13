@@ -17,7 +17,7 @@ not present in the main settings.py
 
 1. Install django-pluggableappsettings
     * From the pip repository: ```pip install django-pluggableappsettings```
-    * or directly from github: ```pip install git+git://github.com/NB-Dev/django-pluggableappsettings.git``
+    * or directly from github: ```pip install git+git://github.com/NB-Dev/django-pluggableappsettings.git```
 
 2. Create your AppSettings class in any of your project's files. E.g. in 'app_settings.py'.
 
