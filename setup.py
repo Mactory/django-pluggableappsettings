@@ -13,22 +13,22 @@ logger = logging.getLogger(__name__)
 import os
 from setuptools import setup, find_packages
 
-long_description = ''
-if os.path.exists('README.rst'):
-    long_description = open('README.rst').read()
-
 # allow setup.py to be run from any path
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 setup(
     name='django-pluggableappsettings',
-    version='2.0.0',
+    version='2.0.2',
     packages=find_packages(exclude=['*.tests',]),
     include_package_data=True,
     install_requires=['Django >=2.0',],
     license='MIT License',
     description='A convenience class for providing default values for a django app setting.',
     long_description=long_description,
+    long_description_content_type="text/markdown",
     url='http://github.com/NB-Dev/django-pluggableappsettings',
     author='Tim Schneider',
     author_email='tim.schneider@pay-per-x.de',
