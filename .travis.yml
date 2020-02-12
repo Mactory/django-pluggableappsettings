@@ -1,6 +1,5 @@
 language: python
 python:
-  - "2.7"
   - "3.4"
   - "3.5"
   - "3.6"
@@ -11,12 +10,6 @@ before_install:
 services:
   - xvfb
 env:
-  - DJANGO_VERSION=1.6.11
-  - DJANGO_VERSION=1.7.11
-  - DJANGO_VERSION=1.8.19
-  - DJANGO_VERSION=1.9.13
-  - DJANGO_VERSION=1.10.8
-  - DJANGO_VERSION=1.11.28
   - DJANGO_VERSION=2.0.13
   - DJANGO_VERSION=2.1.15
   - DJANGO_VERSION=2.2.10
@@ -24,32 +17,16 @@ env:
 
 matrix:
   exclude:
-    - python: "2.7"
-      env: DJANGO_VERSION=2.0.13
-    - python: "2.7"
-      env: DJANGO_VERSION=2.1.15
-    - python: "2.7"
-      env: DJANGO_VERSION=2.2.10
-    - python: "2.7"
-      env: DJANGO_VERSION=3.0.3
     - python: "3.4"
       env: DJANGO_VERSION=1.6.11
+    - python: "3.4"
+      env: DJANGO_VERSION=2.1.15
+    - python: "3.4"
+      env: DJANGO_VERSION=2.2.10
+    - python: "3.4"
+      env: DJANGO_VERSION=3.0.3
     - python: "3.5"
-      env: DJANGO_VERSION=1.6.11 #HTMLParseError is no longer supported
-    - python: "3.5"
-      env: DJANGO_VERSION=1.7.11 #HTMLParseError is no longer supported
-    - python: "3.6"
-      env: DJANGO_VERSION=1.6.11  #HTMLParseError is no longer supported
-    - python: "3.6"
-      env: DJANGO_VERSION=1.7.11  #HTMLParseError is no longer supported
-    - python: "3.7"
-      env: DJANGO_VERSION=1.6.11  #HTMLParseError is no longer supported
-    - python: "3.7"
-      env: DJANGO_VERSION=1.7.11  #HTMLParseError is no longer supported
-    - python: "3.8"
-      env: DJANGO_VERSION=1.6.11  #HTMLParseError is no longer supported
-    - python: "3.8"
-      env: DJANGO_VERSION=1.7.11  #HTMLParseError is no longer supported
+      env: DJANGO_VERSION=3.0.3
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:

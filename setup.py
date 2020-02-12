@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 import logging
 
-__author__ = 'Tim Schneider <tim.schneider@northbridge-development.de>'
-__copyright__ = "Copyright 2015, Northbridge Development Konrad & Schneider GbR"
+__author__ = 'Tim Schneider <tim.schneider@pay-per-x.de>'
+__copyright__ = "Copyright 2015 - 2020, Tim Schneider"
 __credits__ = ["Tim Schneider", ]
 __maintainer__ = "Tim Schneider"
-__email__ = "mail@northbridge-development.de"
 __status__ = "Release"
 
 logger = logging.getLogger(__name__)
@@ -23,36 +22,34 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-pluggableappsettings',
-    version='1.1.6',
+    version='2.0.0',
     packages=find_packages(exclude=['*.tests',]),
     include_package_data=True,
-    install_requires=['Django >=1.6',],
+    install_requires=['Django >=2.0',],
     license='MIT License',
     description='A convenience class for providing default values for a django app setting.',
     long_description=long_description,
     url='http://github.com/NB-Dev/django-pluggableappsettings',
-    author='Nothrbridge Development Konrad & Schneider GbR',
-    author_email='mail@nb-dev.de',
+    author='Tim Schneider',
+    author_email='tim.schneider@pay-per-x.de',
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
-        'Framework :: Django :: 1.6',
-        'Framework :: Django :: 1.7',
-        'Framework :: Django :: 1.8',
-        'Framework :: Django :: 1.9',
-        'Framework :: Django :: 1.10',
-        'Framework :: Django :: 1.11',
+        'Framework :: Django :: 2.0',
+        'Framework :: Django :: 2.1',
+        'Framework :: Django :: 2.2',
+        'Framework :: Django :: 3.0',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License', # example license
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
     ],

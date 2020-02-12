@@ -11,7 +11,7 @@ not present in the main settings.py
 
 ## Requirements:
 
-* Django >= 1.6
+* Django >= 2.0
 
 ## Quick start
 
@@ -142,6 +142,11 @@ mock installed for them to run. If you also want to run coverage, you need to in
 
 ## CHANGELOG
 
+### v. 2.0.0 (2020-02-12)
+- Breaking Change: Dropping Support for Python 2. Results in a dropping of support for Django 1.x.
+- Addings Upport for Django 2.1, 2.2 and 3.0
+
+
 ### v. 1.1.6 (2017-05-19)
 - Fixing the README to be correctly displayed on pypi
 
@@ -203,4 +208,4 @@ Integer
 type
 
 ## Maintainers
-This Project is maintaned by [Northbridge Development Konrad & Schneider GbR](http://www.northbridge-development.de) Softwareentwicklung
+This Project is maintaned by [Pay-Per-X](https://www.pay-per-x.com)

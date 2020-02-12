@@ -2,8 +2,6 @@ import inspect
 import logging
 from pydoc import locate
 import collections
-from django.utils.six import with_metaclass
-import six
 from warnings import warn
 
 __author__ = 'Tim Schneider <tim.schneider@northbridge-development.de>'
@@ -72,7 +70,7 @@ class SettingsMetaClass(type):
 
         return _values[item_name].value()
 
-class AppSettings(with_metaclass(SettingsMetaClass, object)):
+class AppSettings(object, metaclass=SettingsMetaClass):
     """
     Class that has the SettingsMetaClass ass metaclass. This is the base class for AppSettings classes
     """
@@ -103,7 +101,7 @@ class Setting(object):
         # We only accept strings as aliases so
         # Use only strings from an iterable
         if isinstance(aliases, collections.Iterable):
-            self._aliases = [a for a in aliases if isinstance(a, six.string_types)]
+            self._aliases = [a for a in aliases if isinstance(a, str)]
         # or ignore all aliases
         else:
             self._aliases = []
