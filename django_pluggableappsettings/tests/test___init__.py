@@ -9,6 +9,7 @@ try:
 except ImportError:
     from django.test.utils import override_settings
 from mock import MagicMock, patch
+from django.conf import settings
 from django_pluggableappsettings import AppSettings, Setting, ClassSetting, NOT_SET_VALUE, TypedSetting, \
     CalledOnceSetting, CalledBaseSetting, CallableSetting, CalledEachTimeSetting
 
@@ -38,6 +39,8 @@ class TestAppSettingsTestCase(TestCase):
     def setUp(self):
         self.values = {}
         TestAppSettings._values = self.values
+        settings.EXISTENT = 'valid_setting'
+        settings.EXISTENT_APP_SETTING = Setting('valid_setting')
 
 class AppSettingsTestCase(TestAppSettingsTestCase):
     def test_access_of_non_existing_setting(self):
@@ -52,6 +55,16 @@ class AppSettingsTestCase(TestAppSettingsTestCase):
             pass
         except:
             self.fail()
+    
+    def test_access_of_django_settings(self):
+        '''
+        Test whether an non existend app setting is replaced with corresponding django setting
+        :return:
+        '''
+        ret = TestAppSettings.EXISTENT
+        self.assertEqual(ret, 'valid_setting')
+        ret = TestAppSettings.EXISTENT_APP_SETTING
+        self.assertEqual(ret, settings.EXISTENT_APP_SETTING)
 
     def test_access_of_non_settings(self):
         '''
