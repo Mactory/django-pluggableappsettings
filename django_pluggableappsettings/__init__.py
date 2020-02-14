@@ -39,6 +39,10 @@ class SettingsMetaClass(type):
         try:
             item = super(SettingsMetaClass, self).__getattribute__(item_name)
         except AttributeError:
+            from django.conf import settings
+            item = getattr(settings, item_name, NOT_SET_VALUE)
+            if item != NOT_SET_VALUE:
+                return item
             raise AttributeError('The setting %s is not defined for this App' % item_name)
 
         if not isinstance(item, Setting):
