@@ -53,6 +53,14 @@ class AppSettingsTestCase(TestAppSettingsTestCase):
         except:
             self.fail()
 
+    def test_access_of_django_setting(self):
+        '''
+        Test whether the setting from django.conf.settings is returned if it is available
+        :return:
+        '''
+        from django.conf import settings
+        self.assertEqual(TestAppSettings.SETTING_THAT_WE_CAN_TEST, settings.SETTING_THAT_WE_CAN_TEST)
+
     def test_access_of_non_settings(self):
         '''
         Test whether non Setting attributes can be accessed

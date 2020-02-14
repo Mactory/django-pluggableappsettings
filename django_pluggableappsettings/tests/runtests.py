@@ -61,7 +61,8 @@ settings.configure(
     USE_L10N=True,
     USE_TZ=True,
     STATIC_URL='/static/',
-    FIXTURE_DIRS=glob.glob(BASE_DIR + '/' + '*/fixtures/')
+    FIXTURE_DIRS=glob.glob(BASE_DIR + '/' + '*/fixtures/'),
+    SETTING_THAT_WE_CAN_TEST=object()
 
 )
 

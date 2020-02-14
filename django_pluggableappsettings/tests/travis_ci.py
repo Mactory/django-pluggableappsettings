@@ -52,7 +52,8 @@ settings.configure(
     PASSWORD_HASHERS=(
         'django.contrib.auth.hashers.MD5PasswordHasher',
     ),
-    FIXTURE_DIRS=glob.glob(BASE_DIR + '/' + '*/fixtures/')
+    FIXTURE_DIRS=glob.glob(BASE_DIR + '/' + '*/fixtures/'),
+    SETTING_THAT_WE_CAN_TEST=object()
 
 )
 
