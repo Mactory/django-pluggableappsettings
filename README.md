@@ -142,8 +142,11 @@ mock installed for them to run. If you also want to run coverage, you need to in
 
 ## CHANGELOG
 
+### v. 2.0.3 (2020-02-14)
+- If a setting is not defined on the `AppSettings` object, it is now retrieved from `django.conf.settings` if it is available there. This makes it possible to use the `AppSettings` as a drop-in replacement for `django.conf.settings`. Thank you [@mkay849](https://github.com/mkay849) for the pull request.
+
 ### v. 2.0.2 (2020-02-12)
-- Moving to a Readmy.md did not work for pypi... now it should be though.
+- Moving to a Readme.md did not work for pypi... now it should be though.
 
 ### v. 2.0.0 (2020-02-12)
 - Breaking Change: Dropping Support for Python 2. Results in a dropping of support for Django 1.x.
