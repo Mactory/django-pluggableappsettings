@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
+
 import logging
 
 from django.test import TestCase
@@ -9,7 +10,7 @@ try:
 except ImportError:
     from django.test.utils import override_settings
 from mock import MagicMock, patch
-from django_pluggableappsettings import AppSettings, Setting, ClassSetting, NOT_SET_VALUE, TypedSetting, \
+from django_pluggableappsettings import AppSettings, FloatSetting, IntSetting, IterableSetting, Setting, ClassSetting, NOT_SET_VALUE, StringSetting, TypedSetting, \
     CalledOnceSetting, CalledBaseSetting, CallableSetting, CalledEachTimeSetting
 
 __author__ = 'Tim Schneider <tim.schneider@northbridge-development.de>'
@@ -352,3 +353,22 @@ class TypedSettingTestCase(TestCase):
         # No error
         self.assertEqual(setting._get('SETTING', 1), 1)
         self.assertEqual(setting._get('SETTING', '1'), 1)
+
+
+class IntSettingTestCase(TestCase):
+    def test_initialization(self):
+        IntSetting()
+
+class FloatSettingTestCase(TestCase):
+    def test_initialization(self):
+        FloatSetting()
+        
+class StringSettingTestCase(TestCase):
+    def test_initialization(self):
+        StringSetting()
+
+class IterableSettingTestCase(TestCase):
+    def test_initialization(self):
+        IterableSetting()
+
+        
