@@ -22,7 +22,7 @@ try:
     import coverage # Import coverage if available
     cov = coverage.coverage(
         cover_pylib=False,
-        config_file=os.path.join(os.path.dirname(__file__), 'coverage.conf'),
+        config_file=os.path.join(os.path.dirname(__file__), '.coveragerc'),
         include='%s/*' % BASE_DIR,
     )
     cov.start()

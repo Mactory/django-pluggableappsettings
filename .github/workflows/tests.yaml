@@ -27,4 +27,4 @@ jobs:
       - name: Run tests
         run: |
           python setup.py develop
-          coverage run --rcfile='django_pluggableappsettings/tests/coverage.conf' --source='./django_pluggableappsettings/' django_pluggableappsettings/tests/runtests_ci.py
+          coverage run --rcfile='django_pluggableappsettings/tests/.coveragerc' --source='./django_pluggableappsettings/' django_pluggableappsettings/tests/runtests_ci.py
