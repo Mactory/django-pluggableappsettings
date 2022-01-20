@@ -1,0 +1,30 @@
+name: Python package
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        python-version: ["3.6.x", "3.7.x", "3.8.x", "3.9.x", "3.10.x"]
+        django-version: ["2.2.26", "3.2.11"]
+        exclude:
+          - python-version: "3.6.x"
+            django-version: "3.2.11"
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install django==${{ matrix.django-version }}
+          pip install coveralls six mock
+      - name: Run tests
+        run: |
+          python setup.py develop
+          coverage run --rcfile='django_pluggableappsettings/tests/coverage.conf' --source='./django_pluggableappsettings/' django_pluggableappsettings/tests/runtests_ci.py

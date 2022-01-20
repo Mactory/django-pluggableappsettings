@@ -84,4 +84,7 @@ args.append(test_cases)
 #args.append('--verbosity=2')
 args.extend(sys.argv[offset:])
 
+import warnings
+warnings.filterwarnings("error", category=DeprecationWarning)
+
 execute_from_command_line(args)
