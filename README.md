@@ -8,7 +8,7 @@ not present in the main settings.py
 
 ## Requirements:
 
-- Django >= 2.0
+- Django >= 2.2
 
 ## Quick start
 
@@ -233,4 +233,4 @@ mock installed for them to run. If you also want to run coverage, you need to in
 
 ## Maintainers
 
-This Project is maintaned by [Pay-Per-X](https://www.pay-per-x.com)
+This Project is maintaned by [Mactory](https://github.com/Mactory)

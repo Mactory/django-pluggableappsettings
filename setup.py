@@ -18,7 +18,7 @@ setup(
     version='2.1.0',
     packages=find_packages(exclude=['*.tests',]),
     include_package_data=True,
-    install_requires=['Django >=2.0',],
+    install_requires=['Django >=2.2',],
     license='MIT License',
     description='A convenience class for providing default values for a django app setting.',
     long_description=long_description,
