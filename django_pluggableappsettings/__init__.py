@@ -1,7 +1,11 @@
 import inspect
 import logging
 from pydoc import locate
-import collections
+try:
+    from collections.abc import Iterable
+except ImportError:
+    from collections import Iterable   # for Python < 3.9 
+
 from warnings import warn
 
 __author__ = 'Tim Schneider <tim.schneider@northbridge-development.de>'
@@ -104,7 +108,7 @@ class Setting(object):
 
         # We only accept strings as aliases so
         # Use only strings from an iterable
-        if isinstance(aliases, collections.Iterable):
+        if isinstance(aliases, Iterable):
             self._aliases = [a for a in aliases if isinstance(a, str)]
         # or ignore all aliases
         else:
@@ -293,5 +297,5 @@ class IterableSetting(TypedSetting):
     """
     An iterable setting
     """
-    _setting_type = collections.Iterable
+    _setting_type = Iterable
     _cast_value = False

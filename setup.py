@@ -2,7 +2,7 @@
 import logging
 
 __author__ = 'Tim Schneider <tim.schneider@pay-per-x.de>'
-__copyright__ = "Copyright 2015 - 2020, Tim Schneider"
+__copyright__ = "Copyright 2015 - 2022, Tim Schneider"
 __credits__ = ["Tim Schneider", ]
 __maintainer__ = "Tim Schneider"
 __status__ = "Release"
@@ -21,7 +21,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='django-pluggableappsettings',
-    version='2.0.3',
+    version='2.1.0',
     packages=find_packages(exclude=['*.tests',]),
     include_package_data=True,
     install_requires=['Django >=2.0',],

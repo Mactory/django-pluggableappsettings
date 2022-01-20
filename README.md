@@ -138,6 +138,13 @@ mock installed for them to run. If you also want to run coverage, you need to in
 
 ## CHANGELOG
 
+### v. 2.1.0 (2022-01-20)
+
+- Fixes deprectated location of "Iterable" in collections module to make this project Python 3.10 compatible. Thank you [@kocunop](https://github.com/kocunop) for the pull request.
+- Move to github actions for testing
+- Removing support for old Python and Django Versions that are no longer officially supported. I did not actually change the codebase but removed the tests while moving to github actions.
+- Added tests for deprecation warnings, to catch those problems ahead of time in the future.
+
 ### v. 2.0.3 (2020-02-14)
 
 - If a setting is not defined on the `AppSettings` object, it is now retrieved from `django.conf.settings` if it is available there. This makes it possible to use the `AppSettings` as a drop-in replacement for `django.conf.settings`. Thank you [@mkay849](https://github.com/mkay849) for the pull request.
