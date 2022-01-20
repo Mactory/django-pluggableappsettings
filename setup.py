@@ -1,12 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
 
-__author__ = 'Tim Schneider <tim.schneider@pay-per-x.de>'
-__copyright__ = "Copyright 2015 - 2022, Tim Schneider"
-__credits__ = ["Tim Schneider", ]
-__maintainer__ = "Tim Schneider"
-__status__ = "Release"
-
 logger = logging.getLogger(__name__)
 
 
@@ -31,7 +25,6 @@ setup(
     long_description_content_type="text/markdown",
     url='http://github.com/NB-Dev/django-pluggableappsettings',
     author='Tim Schneider',
-    author_email='tim.schneider@pay-per-x.de',
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
